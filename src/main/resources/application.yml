@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+#      authentication-database: test
+#      username: admin
+#      password:
+      database: test
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
