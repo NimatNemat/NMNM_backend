@@ -1,4 +1,4 @@
-package com.nimatnemat.nine.domain.restaurant.restaurant;
+package com.nimatnemat.nine.domain.restaurant;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;

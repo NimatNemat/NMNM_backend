@@ -1,4 +1,4 @@
-package com.nimatnemat.nine.domain.restaurant.restaurant;
+package com.nimatnemat.nine.domain.restaurant;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
