@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "사용자 등록 API", description = "신규 사용자를 등록합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "등록 성공"),
+            @ApiResponse(responseCode = "201", description = "등록 성공입니다잇"),
             @ApiResponse(responseCode = "400", description = "등록 실패")
     })
     public ResponseEntity<User> register(@RequestBody UserRegistrationDto registrationDto) {

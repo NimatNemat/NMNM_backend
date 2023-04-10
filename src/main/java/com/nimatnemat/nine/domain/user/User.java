@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 
-@Document(collection = "user_db")
+@Document(collection = "user_table")
 @Getter
 @NoArgsConstructor
 public class User {

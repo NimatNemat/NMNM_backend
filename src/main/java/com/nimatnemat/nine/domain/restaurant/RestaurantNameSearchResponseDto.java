@@ -1,5 +1,6 @@
 package com.nimatnemat.nine.domain.restaurant;
 
+import com.nimatnemat.nine.domain.restaurant.Restaurant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

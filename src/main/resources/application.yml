@@ -1,12 +1,14 @@
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
+#      host: localhost
+#      port: 27017
 #      authentication-database: test
 #      username: admin
 #      password:
-      database: test
+#      database: test
+      uri: mongodb+srv://dongun3m:13792346asd@seondongun.cvaxniv.mongodb.net/restaurant_db
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
