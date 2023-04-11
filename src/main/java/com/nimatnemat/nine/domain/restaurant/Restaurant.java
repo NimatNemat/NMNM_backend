@@ -2,15 +2,19 @@ package com.nimatnemat.nine.domain.restaurant;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.List;
 
 @Document(collection = "restaurant_table")
 @Getter
 @NoArgsConstructor
 public class Restaurant {
     @Id
-    private Object _id;
+    private ObjectId _id;
     private Long restaurantId;
     private String name;
     private Long xPosition;
@@ -22,5 +26,8 @@ public class Restaurant {
     private String number;
     private String businessHours;
     private String tags;
-    private Object imageFile;
+    @Field("imageFile")
+
+    private ObjectId imageFile;
+    private List<List<String>> menu;
 }
