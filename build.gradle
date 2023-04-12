@@ -27,9 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'com.h2database:h2'
 	//mail
-	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
-	implementation 'jakarta.mail:jakarta.mail-api:2.0.1'
-	implementation 'com.sun.mail:jakarta.mail:2.0.1'
+//	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
+//	implementation 'jakarta.mail:jakarta.mail-api:2.0.1'
+//	implementation 'com.sun.mail:jakarta.mail:2.0.1'
 
 
 
