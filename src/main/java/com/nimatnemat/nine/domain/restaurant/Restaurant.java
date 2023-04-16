@@ -25,9 +25,20 @@ public class Restaurant {
     private String roadAddress;
     private String number;
     private String businessHours;
-    private String tags;
+    private List<List<String>> tags;
     @Field("imageFile")
-
     private ObjectId imageFile;
     private List<List<String>> menu;
+
+    public String getImageFile() {
+        if (imageFile != null) {
+            return imageFile.toHexString();
+        } else {
+            // Handle the null case, e.g., log a warning, return a default value or throw a custom exception
+            // For example, you can return null or an empty string:
+            return null;
+            // OR
+            // return "";
+        }
+    }
 }

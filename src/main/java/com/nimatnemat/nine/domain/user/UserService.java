@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -51,5 +51,48 @@ public class UserService {
         }
 
         return null;
+    }
+    public User findById(String id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public boolean deleteById(String id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+    public User updateUser(String id, UserUpdateDto updatedUser) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            // Update the user's properties with the updatedUser properties
+            // For example:
+            user.setNickName(user.getNickName());
+            user.setAge(user.getAge());
+            // ... (update other properties as needed)
+
+            return userRepository.save(user);
+        }
+
+        return null;
+    }
+
+    // Add this method to get a list of all users
+    public List<User> getUserList() {
+        return userRepository.findAll();
+    }
+    public boolean withdraw(String id) {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent()) {
+            userRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 }

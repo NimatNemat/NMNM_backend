@@ -31,6 +31,14 @@ public class User {
         this.email = email;
         this.profileImage = profileImage;
     }
-
     // Getters, setters, equals, hashCode, etc...
+    public String getId() {
+        return _id;
+    }
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+    public void setAge(Long age) {
+        this.age = age;
+    }
 }

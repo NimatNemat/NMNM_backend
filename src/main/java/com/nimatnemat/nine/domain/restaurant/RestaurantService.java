@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -13,7 +14,12 @@ public class RestaurantService {
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
+
+    public Optional<Restaurant> getRestaurantByRestaurantId(Long restaurantId) {
+        return restaurantRepository.findByRestaurantId(restaurantId);
+    }
 }
+
 //package com.nimatnemat.nine.domain.restaurant;
 //
 //import lombok.RequiredArgsConstructor;
