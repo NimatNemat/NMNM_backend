@@ -24,7 +24,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
     //회원가입을 위한 코드
-    public User register(UserRegistrationDto registrationDto, byte[] profileImage) {
+    public User register(UserRegistrationDto registrationDto) {
         Optional<User> userOptional = userRepository.findByEmail(registrationDto.getEmail());
 
         if (userOptional.isPresent()) {
@@ -37,7 +37,7 @@ public class UserService {
                 registrationDto.getGender(),
                 passwordEncoder.encode(registrationDto.getPassword()),
                 registrationDto.getNickName(),
-                profileImage,
+                registrationDto.getProfileImage(),
                 registrationDto.getEmail(),
                 registrationDto.getBirthdate()
         );
@@ -100,19 +100,19 @@ public class UserService {
 
         return false;
     }
-    public byte[] getProfileImageByUserId(String userId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("userId").is(userId));
-        User user = mongoTemplate.findOne(query, User.class);
-
-        if (user != null) {
-            return user.getProfileImage();
-        } else {
-            // Handle the case when the user is not found, e.g., log a warning, return a default value or throw a custom exception
-            // For example, you can return null or an empty byte array:
-            return null;
-            // OR
-            // return new byte[0];
-        }
-    }
+//    public byte[] getProfileImageByUserId(String userId) {
+//        Query query = new Query();
+//        query.addCriteria(Criteria.where("userId").is(userId));
+//        User user = mongoTemplate.findOne(query, User.class);
+//
+//        if (user != null) {
+//            return user.getProfileImage();
+//        } else {
+//            // Handle the case when the user is not found, e.g., log a warning, return a default value or throw a custom exception
+//            // For example, you can return null or an empty byte array:
+//            return null;
+//            // OR
+//            // return new byte[0];
+//        }
+//    }
 }

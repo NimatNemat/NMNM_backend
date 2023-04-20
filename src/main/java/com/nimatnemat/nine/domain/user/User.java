@@ -16,18 +16,18 @@ import java.util.Date;
 public class User {
 
     @Id
-    private String _id;
+    private ObjectId _id;
     private String userId;
     private Long gender;
     private String password;
     private String nickName;
-    @Field("profileImage")
-    private byte[] profileImage;
+
+    private ObjectId profileImage;
     private String email;
     private Date birthdate;
 
 
-    public User(String userId, Long gender, String password, String nickName,  byte[] profileImage, String email, Date birthdate) {
+    public User(String userId, Long gender, String password, String nickName,  ObjectId profileImage, String email, Date birthdate) {
         this.userId = userId;
         this.gender = gender;
         this.password = password;
@@ -37,7 +37,7 @@ public class User {
         this.birthdate = birthdate;
     }
     // Getters, setters, equals, hashCode, etc...
-    public String getId() {
+    public ObjectId getId() {
         return _id;
     }
     public void setNickName(String nickName) {

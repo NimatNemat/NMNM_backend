@@ -48,10 +48,10 @@ public class UserController {
     })
     public ResponseEntity<User> register(@RequestBody UserRegistrationDto registrationDto) {
 
-        String base64ProfileImage = registrationDto.getProfileImage();
-        byte[] decodedProfileImage = Base64.getDecoder().decode(base64ProfileImage);
+//        String base64ProfileImage = registrationDto.getProfileImage();
+//        byte[] decodedProfileImage = Base64.getDecoder().decode(base64ProfileImage);
 
-        User newUser = userService.register(registrationDto, decodedProfileImage);
+        User newUser = userService.register(registrationDto);
         System.out.println("test");
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -111,36 +111,36 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> edit(@RequestBody UserUpdateDto userUpdateDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            User user = (User) authentication.getPrincipal();
-            User updatedUser = userService.updateUser(user.getId(), userUpdateDto);
-            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
+//    @PutMapping("/update")
+//    public ResponseEntity<User> edit(@RequestBody UserUpdateDto userUpdateDto) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.getPrincipal() instanceof User) {
+//            User user = (User) authentication.getPrincipal();
+//            User updatedUser = userService.updateUser(user.getId(), userUpdateDto);
+//            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> withdraw() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            User user = (User) authentication.getPrincipal();
-            userService.withdraw(user.getId());
-            SecurityContextHolder.clearContext();
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
-    @GetMapping("/profileImage/{userId}")
-    public ResponseEntity<byte[]> getProfileImage(@PathVariable String userId) {
-        byte[] profileImage = userService.getProfileImageByUserId(userId);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        return new ResponseEntity<>(profileImage, headers, HttpStatus.OK);
-    }
+//    @DeleteMapping("/delete")
+//    public ResponseEntity<Void> withdraw() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.getPrincipal() instanceof User) {
+//            User user = (User) authentication.getPrincipal();
+//            userService.withdraw(user.getId());
+//            SecurityContextHolder.clearContext();
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
+//    @GetMapping("/profileImage/{userId}")
+//    public ResponseEntity<byte[]> getProfileImage(@PathVariable String userId) {
+//        byte[] profileImage = userService.getProfileImageByUserId(userId);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_PNG);
+//        return new ResponseEntity<>(profileImage, headers, HttpStatus.OK);
+//    }
 
 }

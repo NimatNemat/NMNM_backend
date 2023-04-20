@@ -9,7 +9,7 @@ public class UserRegistrationDto {
     private String password;
     private Long gender;
     private String nickName;
-    private String profileImage;
+    private ObjectId profileImage;
     private String email;
     private Date birthdate;
     public String getUserId() {
@@ -24,7 +24,7 @@ public class UserRegistrationDto {
     public String getNickName() {
         return nickName;
     }
-    public String getProfileImage() {
+    public ObjectId getProfileImage() {
         return profileImage;
     }
     public String getEmail() {return email;}
