@@ -2,10 +2,13 @@ package com.nimatnemat.nine.domain.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Document(collection = "user_table")
 @Getter
@@ -15,21 +18,23 @@ public class User {
     @Id
     private String _id;
     private String userId;
-    private Long age;
-    private String gender;
+    private Long gender;
     private String password;
     private String nickName;
+    @Field("profileImage")
+    private byte[] profileImage;
     private String email;
-    private String profileImage;
+    private Date birthdate;
 
-    public User(String userId, Long age, String gender, String password, String nickName, String email, String profileImage) {
+
+    public User(String userId, Long gender, String password, String nickName,  byte[] profileImage, String email, Date birthdate) {
         this.userId = userId;
-        this.age = age;
         this.gender = gender;
         this.password = password;
         this.nickName = nickName;
-        this.email = email;
         this.profileImage = profileImage;
+        this.email = email;
+        this.birthdate = birthdate;
     }
     // Getters, setters, equals, hashCode, etc...
     public String getId() {
@@ -38,7 +43,9 @@ public class User {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-    public void setAge(Long age) {
-        this.age = age;
-    }
+    public String getEmail() {return email;}
+
+    //    public void setAge(Long age) {
+//        this.age = age;
+//    }
 }

@@ -1,9 +1,13 @@
 package com.nimatnemat.nine.domain.restaurant;
 
+import com.nimatnemat.nine.domain.like.Like;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -11,6 +15,7 @@ import java.util.List;
 
 @Document(collection = "restaurant_table")
 @Getter
+@Setter
 @NoArgsConstructor
 public class Restaurant {
     @Id
@@ -29,7 +34,8 @@ public class Restaurant {
     @Field("imageFile")
     private ObjectId imageFile;
     private List<List<String>> menu;
-
+    private String peculiarTaste;
+    private Long likeCount;
     public String getImageFile() {
         if (imageFile != null) {
             return imageFile.toHexString();

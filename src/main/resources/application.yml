@@ -8,7 +8,9 @@ spring:
 #      password:
 #      database: test
       uri: ${DB_URI}
-
+  jwt:
+    secret: bmltYXRuZW1hdC1iYWNrZW5kcHJvamVjdC1qd3Qtc2VjcmV0a2V5LWp3dC1iYWNrZW5kcHJvamVjdC1tYWRlYnktc3ByaW5nYm9vdAo=
+    expiration: 36000000
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -31,3 +33,6 @@ spring:
           ssl:
             trust: smtp.naver.com
             enable: true #반드시 필요 -> SSL 필요로 되어있으면
+  logging:
+    level:
+      com.nimatnemat: DEBUG
