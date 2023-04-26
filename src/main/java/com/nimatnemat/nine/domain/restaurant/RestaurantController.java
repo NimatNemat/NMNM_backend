@@ -38,16 +38,45 @@ import java.util.Optional;
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
+//    @GetMapping("/all")
+//    public List<Restaurant> getAllRestaurants() {
+//        return restaurantService.getAllRestaurants();
+//    }
     @GetMapping("/all")
     public List<Restaurant> getAllRestaurants() {
-        return restaurantService.getAllRestaurants();
+        List<Restaurant> restaurants = restaurantService.getAllRestaurants();
+        restaurants.forEach(restaurant -> {
+            if (restaurant.getImageFile() != null) {
+                String imageUrl = String.format("/images/%s", restaurant.getImageFile().toHexString());
+                restaurant.setImageUrl(imageUrl);
+            } else {
+                restaurant.setImageUrl(null);
+            }
+        });
+        return restaurants;
     }
 
+//    @GetMapping("/{restaurantId}")
+//    public ResponseEntity<?> getRestaurantByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
+//        Optional<Restaurant> restaurantOptional = restaurantService.getRestaurantByRestaurantId(restaurantId);
+//        if (restaurantOptional.isPresent()) {
+//            return ResponseEntity.ok(restaurantOptional.get());
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
+//        }
+//    }
     @GetMapping("/{restaurantId}")
     public ResponseEntity<?> getRestaurantByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
         Optional<Restaurant> restaurantOptional = restaurantService.getRestaurantByRestaurantId(restaurantId);
         if (restaurantOptional.isPresent()) {
-            return ResponseEntity.ok(restaurantOptional.get());
+            Restaurant restaurant = restaurantOptional.get();
+            if (restaurant.getImageFile() != null) {
+                String imageUrl = String.format("/images/%s", restaurant.getImageFile().toHexString());
+                restaurant.setImageUrl(imageUrl);
+            } else {
+                restaurant.setImageUrl(null);
+            }
+            return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
         }
