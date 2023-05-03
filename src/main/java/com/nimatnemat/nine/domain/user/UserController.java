@@ -47,10 +47,6 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "등록 실패")
     })
     public ResponseEntity<User> register(@RequestBody UserRegistrationDto registrationDto) {
-
-//        String base64ProfileImage = registrationDto.getProfileImage();
-//        byte[] decodedProfileImage = Base64.getDecoder().decode(base64ProfileImage);
-
         User newUser = userService.register(registrationDto);
         System.out.println("test");
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
@@ -90,24 +86,38 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
-    @GetMapping("/home")
-    public ResponseEntity<User> home() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof User) {
-            User user = (User) authentication.getPrincipal();
-            return new ResponseEntity<>(user, HttpStatus.OK);
+    @GetMapping("/authentication-status")
+    @Operation(summary = "사용자 인증 상태 확인 API", description = "토큰을 이용하여 사용자 인증 상태를 확인합니다.")
+    public ResponseEntity<String> checkAuthenticationStatus(@RequestHeader("Authorization") String token) {
+        if (JwtTokenProvider.validateToken(token)) {
+            return new ResponseEntity<>("인증되었습니다.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("인증되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") String userId) {
-        Optional<User> userOptional = userService.getUserById(userId);
+    @GetMapping("/userId")
+    @Operation(summary = "회원정보 조회 API", description = "신규 사용자를 등록합니다.")
+    public ResponseEntity<User> getUserById(Authentication authentication) {
+        Optional<User> userOptional = userService.getUserById(authentication.getName());
         if (userOptional.isPresent()) {
             return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PostMapping("/refresh-token")
+    @Operation(summary = "토큰 갱신 API", description = "기존 토큰을 이용하여 새로운 토큰을 발급합니다.")
+    public ResponseEntity<String> refreshToken(@RequestHeader("X-AUTH-TOKEN") String token) {
+        try {
+            if (JwtTokenProvider.validateToken(token)) {
+                String newToken = JwtTokenProvider.refreshToken(token);
+                return ResponseEntity.ok(newToken);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
     }
 

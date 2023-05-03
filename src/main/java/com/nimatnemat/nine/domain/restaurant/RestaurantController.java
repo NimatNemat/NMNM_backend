@@ -23,6 +23,7 @@
 //}
 package com.nimatnemat.nine.domain.restaurant;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("api/restaurant")
+@RequestMapping("/api/restaurant")
 public class RestaurantController {
     private final RestaurantService restaurantService;
 
@@ -43,6 +44,7 @@ public class RestaurantController {
 //        return restaurantService.getAllRestaurants();
 //    }
     @GetMapping("/all")
+    @Operation(summary = "모든 레스토랑 정보 API", description = "모든 레스토랑의 정보를 보여줍니다.")
     public List<Restaurant> getAllRestaurants() {
         List<Restaurant> restaurants = restaurantService.getAllRestaurants();
         restaurants.forEach(restaurant -> {
@@ -66,6 +68,7 @@ public class RestaurantController {
 //        }
 //    }
     @GetMapping("/{restaurantId}")
+    @Operation(summary = "레스토랑 세부 API", description = "레스토랑 하나의 정보를 보여줍니다.")
     public ResponseEntity<?> getRestaurantByRestaurantId(@PathVariable("restaurantId") Long restaurantId) {
         Optional<Restaurant> restaurantOptional = restaurantService.getRestaurantByRestaurantId(restaurantId);
         if (restaurantOptional.isPresent()) {
