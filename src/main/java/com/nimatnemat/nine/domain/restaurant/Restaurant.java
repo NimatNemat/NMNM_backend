@@ -1,6 +1,5 @@
 package com.nimatnemat.nine.domain.restaurant;
 
-import com.nimatnemat.nine.domain.like.Like;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -36,7 +35,7 @@ public class Restaurant {
     private ObjectId imageFile;
     private List<List<String>> menu;
     private String peculiarTaste;
-    private Long likeCount;
+    private List<String> likeUserList;
     @Transient
     private String imageUrl;
 }

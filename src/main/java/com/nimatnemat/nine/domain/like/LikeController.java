@@ -1,5 +1,7 @@
 package com.nimatnemat.nine.domain.like;
 
+import com.nimatnemat.nine.domain.restaurant.Restaurant;
+import com.nimatnemat.nine.domain.restaurant.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -15,10 +17,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/likes")
 public class LikeController {
     @Autowired
     private LikeService likeService;
+    @Autowired
+    private RestaurantService restaurantService;
 
     @PostMapping("/like")
     @Operation(summary = "좋아요 API", description = "좋아요를 POST합니다.")
@@ -46,16 +51,16 @@ public class LikeController {
         }
     }
 
-    @GetMapping("/restaurant/{restaurantId}")
-    @Operation(summary = "레스토랑 좋아요 수 API", description = "레스토랑별 좋아요 수를 보여줍니다")
-    public ResponseEntity<Long> getLikesForRestaurant(@PathVariable Long restaurantId) {
-        long likeCount = likeService.getLikesForRestaurant(restaurantId);
-        return new ResponseEntity<>(likeCount, HttpStatus.OK);
-    }
+//    @GetMapping("/restaurant/{restaurantId}")
+//    @Operation(summary = "레스토랑 좋아요 수 API", description = "레스토랑별 좋아요 수를 보여줍니다")
+//    public ResponseEntity<Long> getLikesForRestaurant(@PathVariable Long restaurantId) {
+//        long likeCount = likeService.getLikesForRestaurant(restaurantId);
+//        return new ResponseEntity<>(likeCount, HttpStatus.OK);
+//    }
     @GetMapping("/user/{userId}")
     @Operation(summary = "사용자가 좋아요한 가게 API", description = "해당 사용자가 좋아요한 식당들을 보여줍니다.")
-    public ResponseEntity<List<Long>> getLikedRestaurantsForUser(@PathVariable String userId) {
-        List<Long> restaurantIds = likeService.getLikedRestaurantIdsForUser(userId);
+    public ResponseEntity<List<Long>> getLikedRestaurantsForUser(Authentication authentication) {
+        List<Long> restaurantIds = likeService.getLikedRestaurantIdsForUser(authentication.getName());
         return new ResponseEntity<>(restaurantIds, HttpStatus.OK);
     }
 }

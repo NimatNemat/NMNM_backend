@@ -1,16 +1,19 @@
 package com.nimatnemat.nine.domain.restaurant;
 
-import com.nimatnemat.nine.domain.like.Like;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
+
+    public RestaurantService(RestaurantRepository restaurantRepository) {
+        this.restaurantRepository = restaurantRepository;
+    }
 
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
@@ -20,16 +23,26 @@ public class RestaurantService {
         return restaurantRepository.findByRestaurantId(restaurantId);
     }
 
-    public void decreaseLikeCount(Long restaurantId) {
+    public void decreaseLikeCount(Long restaurantId, String userId) {
         Optional<Restaurant> restaurantOpt = restaurantRepository.findByRestaurantId(restaurantId);
         if (restaurantOpt.isPresent()) {
             Restaurant restaurant = restaurantOpt.get();
-            long currentLikeCount = restaurant.getLikeCount(); // Change the type to long
-            restaurant.setLikeCount(currentLikeCount - 1);
-            restaurantRepository.save(restaurant);
+            List<String> likeUserList = restaurant.getLikeUserList();
+
+            if (likeUserList.contains(userId)) {
+                likeUserList.remove(userId);
+                restaurant.setLikeUserList(likeUserList);
+                restaurantRepository.save(restaurant);
+            } else {
+                // Handle the case when the user has not liked the restaurant
+            }
         } else {
             // Handle the case when the restaurant is not found
         }
+    }
+    public Restaurant findByRestaurantId(Long restaurantId) {
+        Optional<Restaurant> restaurantOpt = restaurantRepository.findByRestaurantId(restaurantId);
+        return restaurantOpt.orElse(null);
     }
 }
 
