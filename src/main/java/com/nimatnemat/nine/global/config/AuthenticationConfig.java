@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -23,30 +22,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AuthenticationConfig implements WebMvcConfigurer {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider JwtTokenProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .httpBasic().disable()
+        return httpSecurity
+                .httpBasic().disable() // rest api 이므로 기본설정 사용안함. 기본설정은 비인증시 로그인폼 화면으로 redirect
                 .csrf().disable()
-                .cors().configurationSource(request -> {
-                    CorsConfiguration corsConfiguration = new CorsConfiguration();
-                    corsConfiguration.setAllowCredentials(true);
-                    corsConfiguration.addAllowedOrigin("*");
-                    corsConfiguration.addAllowedHeader("*");
-                    corsConfiguration.addAllowedMethod("*");
-                    return corsConfiguration;
-                }).and()
-                .authorizeRequests()
-                .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                .cors().and()
+                .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
+                .requestMatchers("/api/users/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 스프링 시큐리티가 세션 쿠키 방식으로 동작하지 않도록 설정
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
-        return httpSecurity.build();
+                .addFilterBefore(new JwtAuthenticationFilter(JwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
 //    @Override
