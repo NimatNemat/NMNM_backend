@@ -6,16 +6,16 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.Base64;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -41,12 +41,23 @@ public class UserController {
      * @return 등록된 사용자 정보
      */
     @PostMapping("/register")
-    @Operation(summary = "사용자 등록 API", description = "신규 사용자를 등록합니다.")
+    @Operation(summary = "회원가입 API", description = "신규 사용자를 등록합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "등록 성공입니다잇"),
             @ApiResponse(responseCode = "400", description = "등록 실패")
     })
-    public ResponseEntity<User> register(@RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<?> register(@RequestBody UserRegistrationDto registrationDto) {
+        if (userService.isUserIdDuplicated(registrationDto.getUserId())) {
+            return new ResponseEntity<>("이미 사용 중인 아이디입니다.", HttpStatus.BAD_REQUEST);
+        }
+        if (userService.isEmailDuplicated(null, registrationDto.getEmail())) {
+            return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        if (userService.isNicknameDuplicated(null, registrationDto.getNickName())) {
+            return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
+        }
+
         User newUser = userService.register(registrationDto);
         System.out.println("test");
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
@@ -86,15 +97,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
-    @GetMapping("/authentication-status")
-    @Operation(summary = "사용자 인증 상태 확인 API", description = "토큰을 이용하여 사용자 인증 상태를 확인합니다.")
-    public ResponseEntity<String> checkAuthenticationStatus(@RequestHeader("Authorization") String token) {
-        if (JwtTokenProvider.validateToken(token)) {
-            return new ResponseEntity<>("인증되었습니다.", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("인증되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-        }
-    }
+//    @GetMapping("/authentication-status")
+//    @Operation(summary = "사용자 인증 상태 확인 API", description = "토큰을 이용하여 사용자 인증 상태를 확인합니다.")
+//    public ResponseEntity<String> checkAuthenticationStatus(@RequestHeader("Authorization") String token) {
+//        if (JwtTokenProvider.validateToken(token)) {
+//            return new ResponseEntity<>("인증되었습니다.", HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>("인증되지 않았습니다.", HttpStatus.UNAUTHORIZED);
+//        }
+//    }
 
     @GetMapping("/userId")
     @Operation(summary = "회원정보 조회 API", description = "신규 사용자를 등록합니다.")
@@ -102,6 +113,16 @@ public class UserController {
         Optional<User> userOptional = userService.getUserById(authentication.getName());
         if (userOptional.isPresent()) {
             return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/all")
+    @Operation(summary = "전체 유저 정보 조회 API", description = "전체 유저의 아이디, 프로필 이미지, 닉네임을 반환합니다.")
+    public ResponseEntity<List<UserSearchResultDto>> getAllUsers() {
+        List<UserSearchResultDto> allUsers = userService.getAllUsers();
+        if (!allUsers.isEmpty()) {
+            return new ResponseEntity<>(allUsers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -121,30 +142,35 @@ public class UserController {
         }
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<User> edit(@RequestBody UserUpdateDto userUpdateDto) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.getPrincipal() instanceof User) {
-//            User user = (User) authentication.getPrincipal();
-//            User updatedUser = userService.updateUser(user.getId(), userUpdateDto);
-//            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//    }
+    @PutMapping("/update")
+    @Operation(summary = "사용자 정보 업데이트 API", description = "사용자 정보를 업데이트합니다.")
+    public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestBody UserUpdateDto userUpdateDto) {
+//        String userId = authentication.getName();
 
-//    @DeleteMapping("/delete")
-//    public ResponseEntity<Void> withdraw() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.getPrincipal() instanceof User) {
-//            User user = (User) authentication.getPrincipal();
-//            userService.withdraw(user.getId());
-//            SecurityContextHolder.clearContext();
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//    }
+        if (userService.isEmailDuplicated(userId, userUpdateDto.getEmail())) {
+            return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
+        }
+        if (userService.isNicknameDuplicated(userId, userUpdateDto.getNickName())) {
+            return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        User updatedUser = userService.updateUser(userId, userUpdateDto);
+        if (updatedUser != null) {
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("/delete")
+    @Operation(summary = "사용자 정보 삭제 API", description = "사용자 정보를 삭제합니다.")
+    public ResponseEntity<Void> deleteUser(Authentication authentication) {
+        boolean isDeleted = userService.deleteUser(authentication.getName());
+        if (isDeleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 //    @GetMapping("/profileImage/{userId}")
 //    public ResponseEntity<byte[]> getProfileImage(@PathVariable String userId) {
 //        byte[] profileImage = userService.getProfileImageByUserId(userId);

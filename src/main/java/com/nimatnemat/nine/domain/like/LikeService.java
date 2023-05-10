@@ -27,6 +27,9 @@ public class LikeService {
         Restaurant restaurant = restaurantService.findByRestaurantId(restaurantId);
         if (restaurant != null) {
             List<String> likedUserList = restaurant.getLikeUserList();
+            if (likedUserList == null) {
+                likedUserList = new ArrayList<>();
+            }
             if (!likedUserList.contains(userId)) {
                 likedUserList.add(userId);
                 restaurant.setLikeUserList(likedUserList);
@@ -39,6 +42,9 @@ public class LikeService {
         Restaurant restaurant = restaurantService.findByRestaurantId(restaurantId);
         if (restaurant != null) {
             List<String> likedUserList = restaurant.getLikeUserList();
+            if (likedUserList == null) {
+                likedUserList = new ArrayList<>();
+            }
             if (likedUserList.contains(userId)) {
                 likedUserList.remove(userId);
                 restaurant.setLikeUserList(likedUserList);

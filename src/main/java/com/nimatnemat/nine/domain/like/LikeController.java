@@ -30,7 +30,7 @@ public class LikeController {
     public ResponseEntity<?> likeRestaurant(Authentication authentication, @RequestParam Long restaurantId) {
         try {
             likeService.likeRestaurant(authentication.getName(), restaurantId);
-            return new ResponseEntity<>(authentication.getName()+"님의 좋아요가 수행되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>(authentication.getName() +"님의 좋아요가 수행되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

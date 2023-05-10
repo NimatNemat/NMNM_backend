@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,14 +24,9 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
     //회원가입을 위한 코드
     public User register(UserRegistrationDto registrationDto) {
-        Optional<User> userOptional = userRepository.findByEmail(registrationDto.getEmail());
-
-        if (userOptional.isPresent()) {
-            throw new RuntimeException("이미 등록된 이메일입니다.");
-        }
-
         User newUser = new User(
 //                UUID.randomUUID().toString(),
                 registrationDto.getUserId(),
@@ -44,6 +40,7 @@ public class UserService {
 
         return userRepository.save(newUser);
     }
+
     //로그인을 위한 코드
     public User findByUserIdAndPassword(String userId, String password) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
@@ -57,39 +54,36 @@ public class UserService {
 
         return null;
     }
-    public User findById(String id) {
-        return userRepository.findById(id).orElse(null);
-    }
 
-    public boolean deleteById(String id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-    public User updateUser(String id, UserUpdateDto updatedUser) {
-        Optional<User> userOptional = userRepository.findById(id);
-
+    public User updateUser(String userId, UserUpdateDto userUpdateDto) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-
-            // Update the user's properties with the updatedUser properties
-            // For example:
-            user.setNickName(user.getNickName());
-//            user.setAge(user.getAge());
-            // ... (update other properties as needed)
-
+            user.setGender(userUpdateDto.getGender());
+            user.setNickName(userUpdateDto.getNickName());
+            user.setEmail(userUpdateDto.getEmail());
+            user.setBirthdate(userUpdateDto.getBirthdate());
             return userRepository.save(user);
+        } else {
+            return null;
         }
+    }
 
-        return null;
+    public boolean deleteUser(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            userRepository.delete(userOptional.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // Add this method to get a list of all users
     public Optional<User> getUserById(String userId) {
         return userRepository.findByUserId(userId);
     }
+
     public boolean withdraw(String id) {
         Optional<User> userOptional = userRepository.findById(id);
 
@@ -100,19 +94,40 @@ public class UserService {
 
         return false;
     }
-//    public byte[] getProfileImageByUserId(String userId) {
-//        Query query = new Query();
-//        query.addCriteria(Criteria.where("userId").is(userId));
-//        User user = mongoTemplate.findOne(query, User.class);
-//
-//        if (user != null) {
-//            return user.getProfileImage();
-//        } else {
-//            // Handle the case when the user is not found, e.g., log a warning, return a default value or throw a custom exception
-//            // For example, you can return null or an empty byte array:
-//            return null;
-//            // OR
-//            // return new byte[0];
-//        }
-//    }
+
+    public List<UserSearchResultDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserSearchResultDto> allUsers = new ArrayList<>();
+
+        for (User user : users) {
+            allUsers.add(new UserSearchResultDto(user.getUserId(), user.getProfileImage(), user.getNickName()));
+        }
+
+        return allUsers;
+    }
+
+    //중복검사를 위한 메소드 들
+    public boolean isUserIdDuplicated(String userId) {
+        Optional<User> existingUser = userRepository.findByUserId(userId);
+        return existingUser.isPresent();
+    }
+
+    public boolean isEmailDuplicated(String userId, String email) {
+        User currentUser = userRepository.findByUserId(userId).orElse(null);
+        if (currentUser != null && currentUser.getEmail().equals(email)) {
+            return false;
+        }
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        return existingUser.isPresent();
+    }
+
+    public boolean isNicknameDuplicated(String userId, String nickname) {
+        User currentUser = userRepository.findByUserId(userId).orElse(null);
+        if (currentUser != null && currentUser.getNickName().equals(nickname)) {
+            return false;
+        }
+        Optional<User> existingUser = userRepository.findByNickName(nickname);
+        return existingUser.isPresent();
+    }
 }
+
