@@ -23,8 +23,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private GridFSBucket gridFsBucket;
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
