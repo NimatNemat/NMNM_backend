@@ -1,12 +1,17 @@
 package com.nimatnemat.nine.domain.user;
 
+import com.mongodb.client.gridfs.GridFSBucket;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +21,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private GridFSBucket gridFsBucket;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -54,7 +60,33 @@ public class UserService {
 
         return null;
     }
+    public String saveImageToGridFS(MultipartFile image) {
+        try {
+            // 이미지의 입력 스트림을 얻습니다.
+            InputStream inputStream = image.getInputStream();
+            // 이미지의 원본 파일명을 얻습니다.
+            String filename = image.getOriginalFilename();
 
+            // 이미지를 GridFS에 저장합니다.
+            ObjectId objectId = gridFsBucket.uploadFromStream(filename, inputStream);
+
+            // 저장된 이미지의 URL을 생성하고 반환합니다. 실제로는 아래 예시와 같이 도메인을 사용하여 이미지를 접근할 수 있는 URL을 생성해야 합니다.
+            // 예: https://example.com/images/{objectId}
+            String imageUrl = String.format("http://3.39.232.5:8080/images/%s", objectId.toString());
+            return imageUrl;
+        } catch (IOException e) {
+            throw new RuntimeException("이미지를 GridFS에 저장하는 동안 오류가 발생했습니다.", e);
+        }
+    }
+
+    public void updateProfileImage(String userId, String imageUrl) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setProfileImage(imageUrl);
+            userRepository.save(user);
+        }
+    }
     public User updateUser(String userId, UserUpdateDto userUpdateDto) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
