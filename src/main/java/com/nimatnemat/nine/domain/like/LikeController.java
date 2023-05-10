@@ -57,10 +57,10 @@ public class LikeController {
 //        long likeCount = likeService.getLikesForRestaurant(restaurantId);
 //        return new ResponseEntity<>(likeCount, HttpStatus.OK);
 //    }
-    @GetMapping("/user/{userId}")
-    @Operation(summary = "사용자가 좋아요한 가게 API", description = "해당 사용자가 좋아요한 식당들을 보여줍니다.")
-    public ResponseEntity<List<Long>> getLikedRestaurantsForUser(Authentication authentication) {
-        List<Long> restaurantIds = likeService.getLikedRestaurantIdsForUser(authentication.getName());
-        return new ResponseEntity<>(restaurantIds, HttpStatus.OK);
-    }
+//    @GetMapping("/user/{userId}")
+//    @Operation(summary = "사용자가 좋아요한 가게 API", description = "해당 사용자가 좋아요한 식당들을 보여줍니다.")
+//    public ResponseEntity<List<Long>> getLikedRestaurantsForUser(Authentication authentication) {
+//        List<Long> restaurantIds = likeService.getLikedRestaurantIdsForUser(authentication.getName());
+//        return new ResponseEntity<>(restaurantIds, HttpStatus.OK);
+//    }
 }
