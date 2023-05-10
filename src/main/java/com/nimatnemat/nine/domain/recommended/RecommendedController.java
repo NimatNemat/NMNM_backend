@@ -15,8 +15,8 @@ import java.util.Optional;
 @RequestMapping("/api/recommended")
 public class RecommendedController {
 
-        @Autowired
-        private RecommendedService recommendedService;
+    @Autowired
+    private RecommendedService recommendedService;
 
     @GetMapping("/{userId}/first")
     @Operation(summary = "사용자별 첫 번째 추천 레스토랑 조회 API", description = "사용자 ID에 따라 첫 번째 추천 레스토랑 목록을 반환합니다.")
