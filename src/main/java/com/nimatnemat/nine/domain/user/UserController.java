@@ -56,9 +56,9 @@ public class UserController {
             return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        if (userService.isNicknameDuplicated(null, registrationDto.getNickName())) {
-            return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
-        }
+//        if (userService.isNicknameDuplicated(null, registrationDto.getNickName())) {
+//            return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
+//        }
 
         User newUser = userService.register(registrationDto);
         System.out.println("test");

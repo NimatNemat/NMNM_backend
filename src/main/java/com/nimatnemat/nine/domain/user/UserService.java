@@ -132,7 +132,7 @@ public class UserService {
         List<UserSearchResultDto> allUsers = new ArrayList<>();
 
         for (User user : users) {
-            allUsers.add(new UserSearchResultDto(user.getUserId(), user.getProfileImage(), user.getNickName()));
+            allUsers.add(new UserSearchResultDto(user.getUserId(), user.getProfileImage(), user.getNickName(), user.getEmail()));
         }
 
         return allUsers;

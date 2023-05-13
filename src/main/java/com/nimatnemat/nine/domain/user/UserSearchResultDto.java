@@ -14,4 +14,5 @@ public class UserSearchResultDto {
     private String userId;
     private String profileImage;
     private String nickName;
+    private String email;
 }
