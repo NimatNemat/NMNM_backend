@@ -18,16 +18,16 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-//    @GetMapping("/{objectId}")
-//    public ResponseEntity<byte[]> getImage(@PathVariable("objectId") String objectId) {
-//        try {
-//            byte[] imageBytes = imageService.getImage(new ObjectId(objectId));
-//            return ResponseEntity.ok()
-//                    .contentType(MediaType.IMAGE_JPEG)
-//                    .body(imageBytes);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(404).build();
-//        }
-//    }
+    @GetMapping("/{objectId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("objectId") String objectId) {
+        try {
+            byte[] imageBytes = imageService.getImage(new ObjectId(objectId));
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(404).build();
+        }
+    }
 }
