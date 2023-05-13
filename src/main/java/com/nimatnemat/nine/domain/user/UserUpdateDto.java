@@ -15,6 +15,7 @@ public class UserUpdateDto {
     private String nickName;
     private String email;
     private Date birthdate;
+    private String groupName;
     // 생성자, getter, setter 생략
 }
 

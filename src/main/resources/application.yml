@@ -7,9 +7,9 @@ spring:
 #      username: admin
 #      password:
 #      database: test
-      uri: mongodb+srv://dongun3m:13792346asd@seondongun.cvaxniv.mongodb.net/restaurant_db
+      uri: ${DB_URI}
   jwt:
-    secret: bmltYXRuZW1hdC1iYWNrZW5kcHJvamVjdC1qd3Qtc2VjcmV0a2V5LWp3dC1iYWNrZW5kcHJvamVjdC1tYWRlYnktc3ByaW5nYm9vdAo=
+    secret: ${SECRET_KEY}
     expiration: 36000000
   mvc:
     pathmatch:
@@ -17,8 +17,8 @@ spring:
   mail:
     host: smtp.naver.com #smtp 서버 주소
     port: 465 # 메일 인증서버 포트
-    username: zxvs112@naver.com #네이버 아이디
-    password: zxvs1218 #네이버 비밀번호
+    username: ${NAVER_USER} #네이버 아이디
+    password: ${NAVER_PASSWORD} #네이버 비밀번호
     properties:
       debug: true
       mail:

@@ -111,10 +111,11 @@ public class UserController {
 
     @GetMapping("/userId")
     @Operation(summary = "회원정보 조회 API", description = "신규 사용자를 등록합니다.")
-    public ResponseEntity<User> getUserById(Authentication authentication) {
-        Optional<User> userOptional = userService.getUserById(authentication.getName());
+    public ResponseEntity<UserDto> getUserById(@RequestParam("userId") String userId) {
+        Optional<User> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) {
-            return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+            UserDto userDto = new UserDto(userOptional.get());
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

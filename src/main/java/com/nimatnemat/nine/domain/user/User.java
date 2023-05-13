@@ -29,7 +29,7 @@ public class User {
     private String groupName;
 
 
-    public User(String userId, Long gender, String password, String nickName,  String profileImage, String email, Date birthdate) {
+    public User(String userId, Long gender, String password, String nickName,  String profileImage, String email, Date birthdate, String groupName) {
         this.userId = userId;
         this.gender = gender;
         this.password = password;
@@ -37,5 +37,6 @@ public class User {
         this.profileImage = profileImage;
         this.email = email;
         this.birthdate = birthdate;
+        this.groupName = groupName;
     }
 }

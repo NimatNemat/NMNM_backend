@@ -12,6 +12,7 @@ public class UserRegistrationDto {
     private String profileImage;
     private String email;
     private Date birthdate;
+    private String groupName;
     public String getUserId() {
         return userId;
     }
@@ -29,6 +30,7 @@ public class UserRegistrationDto {
     }
     public String getEmail() {return email;}
     public Date getBirthdate() {return birthdate;}
+    public String getGroupName() {return groupName;}
     // Constructors, getters, setters, etc...
 }
 

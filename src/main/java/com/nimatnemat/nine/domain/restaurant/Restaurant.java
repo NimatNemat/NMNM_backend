@@ -36,6 +36,7 @@ public class Restaurant {
     private List<List<String>> menu;
     private String peculiarTaste;
     private List<String> likeUserList;
+    private List<String> banUserList;
     @Transient
     private String imageUrl;
 }

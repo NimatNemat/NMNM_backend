@@ -76,7 +76,7 @@ public class EmailVerificationService {
     }
 
     public boolean verifyEmail(String email, String inputCode) {
-        Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findByEmail(email);
+        Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(email);
 
         if (optionalEmailVerification.isPresent()) {
             EmailVerification emailVerification = optionalEmailVerification.get();

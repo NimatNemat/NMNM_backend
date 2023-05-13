@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface RestaurantRepository extends MongoRepository<Restaurant, ObjectId> {
     Optional<Restaurant> findByRestaurantId(Long restaurantId);
-
+    List<Restaurant> findByRestaurantIdIn(List<Long> restaurantId);
     List<Restaurant> findByLikeUserListContaining(String userId);
 }
 

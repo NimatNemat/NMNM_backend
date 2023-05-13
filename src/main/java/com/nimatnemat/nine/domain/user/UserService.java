@@ -39,7 +39,8 @@ public class UserService {
                 registrationDto.getNickName(),
                 registrationDto.getProfileImage(),
                 registrationDto.getEmail(),
-                registrationDto.getBirthdate()
+                registrationDto.getBirthdate(),
+                registrationDto.getGroupName()
         );
 
         return userRepository.save(newUser);
@@ -93,6 +94,7 @@ public class UserService {
             user.setNickName(userUpdateDto.getNickName());
             user.setEmail(userUpdateDto.getEmail());
             user.setBirthdate(userUpdateDto.getBirthdate());
+            user.setGroupName(userUpdateDto.getGroupName());
             return userRepository.save(user);
         } else {
             return null;
