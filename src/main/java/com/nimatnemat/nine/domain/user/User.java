@@ -27,6 +27,7 @@ public class User {
     private String email;
     private Date birthdate;
     private String groupName;
+    private String infoMessage;
 
 
     public User(String userId, Long gender, String password, String nickName,  String profileImage, String email, Date birthdate, String groupName) {

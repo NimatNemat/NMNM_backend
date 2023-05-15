@@ -23,6 +23,8 @@ public class EmailVerification {
 
     @Indexed(unique = true)
     private String email;
+    private String userId;
+
 
     private String verificationCode;
 
@@ -32,8 +34,9 @@ public class EmailVerification {
 
     private boolean verified;
 
-    public EmailVerification(String email, String verificationCode, LocalDateTime createdAt, LocalDateTime expiresAt) {
+    public EmailVerification(String email,String userId ,String verificationCode, LocalDateTime createdAt, LocalDateTime expiresAt) {
         this.email = email;
+        this.userId = userId;
         this.verificationCode = verificationCode;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

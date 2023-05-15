@@ -30,14 +30,14 @@ public class LikeController {
     public ResponseEntity<?> likeRestaurant(Authentication authentication, @RequestParam Long restaurantId) {
         try {
             likeService.likeRestaurant(authentication.getName(), restaurantId);
-            return new ResponseEntity<>(authentication.getName() +"님의 좋아요가 수행되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>(authentication.getName() + "님의 좋아요가 수행되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/unlike")
-    @Operation(summary = "싫어요 API", description = "좋아요를 취소합니다.")
+    @Operation(summary = "좋아요 취소 API", description = "좋아요를 취소합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "수행 성공"),
             @ApiResponse(responseCode = "403", description = "로그인을 먼저 해주세요")
@@ -50,7 +50,28 @@ public class LikeController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/ban")
+    @Operation(summary = "안볼래요 API", description = "특정 음식점을 더 이상 보지 않도록 합니다.")
+    public ResponseEntity<?> banRestaurant(@RequestParam("userId") String userId, @RequestParam Long restaurantId) {
+        try {
+            likeService.banRestaurant(userId, restaurantId);
+            return new ResponseEntity<>(userId + "님의 ban이 수행되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
+    @PostMapping("/unban")
+    @Operation(summary = "안볼래요 취소 API", description = "안볼래요를 취소합니다.")
+    public ResponseEntity<?> unbanRestaurant(@RequestParam("userId") String userId, @RequestParam Long restaurantId) {
+        try {
+            likeService.unbanRestaurant(userId, restaurantId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
 //    @GetMapping("/restaurant/{restaurantId}")
 //    @Operation(summary = "레스토랑 좋아요 수 API", description = "레스토랑별 좋아요 수를 보여줍니다")
 //    public ResponseEntity<Long> getLikesForRestaurant(@PathVariable Long restaurantId) {
@@ -63,4 +84,4 @@ public class LikeController {
 //        List<Long> restaurantIds = likeService.getLikedRestaurantIdsForUser(authentication.getName());
 //        return new ResponseEntity<>(restaurantIds, HttpStatus.OK);
 //    }
-}
+

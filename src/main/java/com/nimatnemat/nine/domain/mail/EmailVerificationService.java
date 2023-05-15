@@ -1,5 +1,7 @@
 package com.nimatnemat.nine.domain.mail;
 
+import com.nimatnemat.nine.domain.user.User;
+import com.nimatnemat.nine.domain.user.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -23,6 +25,8 @@ public class EmailVerificationService {
 
     private final JavaMailSender javaMailSender;
     private final EmailVerificationRepository emailVerificationRepository;
+    private final UserRepository userRepository;
+
 
     @Value("${spring.mail.username}")
     private String id;
@@ -60,23 +64,33 @@ public class EmailVerificationService {
         return key.toString();
     }
 
-    public String sendSimpleMessage(String to) throws Exception {
+    public String sendSimpleMessage(String identifier) throws Exception {
+        Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
+        if(optionalUser.isEmpty()) {
+            throw new Exception("User with identifier " + identifier + " not found.");
+        }
+        User user = optionalUser.get();
         String verificationCode = createKey();
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiresAt = now.plusMinutes(10); // 인증 코드 유효 기간: 10분
 
-        EmailVerification emailVerification = new EmailVerification(to, verificationCode, now, expiresAt);
+        EmailVerification emailVerification = new EmailVerification(user.getEmail(), user.getUserId(), verificationCode, now, expiresAt);
         emailVerificationRepository.save(emailVerification);
 
         // 이메일 발송
-        MimeMessage message = createMessage(to, verificationCode);
+        MimeMessage message = createMessage(user.getEmail(), verificationCode);
         javaMailSender.send(message);
 
         return verificationCode;
     }
 
-    public boolean verifyEmail(String email, String inputCode) {
-        Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findFirstByEmailOrderByCreatedAtDesc(email);
+    public boolean verifyEmail(String identifier, String inputCode) {
+        Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
+        if(optionalUser.isEmpty()) {
+            return false;
+        }
+        User user = optionalUser.get();
+        Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findFirstByEmailAndUserIdOrderByCreatedAtDesc(user.getEmail(), user.getUserId());
 
         if (optionalEmailVerification.isPresent()) {
             EmailVerification emailVerification = optionalEmailVerification.get();

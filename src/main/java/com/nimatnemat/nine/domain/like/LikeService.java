@@ -52,6 +52,35 @@ public class LikeService {
             }
         }
     }
+    public void banRestaurant(String userId, Long restaurantId) {
+        Restaurant restaurant = restaurantService.findByRestaurantId(restaurantId);
+        if (restaurant != null) {
+            List<String> bannedUserList = restaurant.getBanUserList();
+            if (bannedUserList == null) {
+                bannedUserList = new ArrayList<>();
+            }
+            if (!bannedUserList.contains(userId)) {
+                bannedUserList.add(userId);
+                restaurant.setBanUserList(bannedUserList);
+                restaurantRepository.save(restaurant);
+            }
+        }
+    }
+
+    public void unbanRestaurant(String userId, Long restaurantId) {
+        Restaurant restaurant = restaurantService.findByRestaurantId(restaurantId);
+        if (restaurant != null) {
+            List<String> bannedUserList = restaurant.getBanUserList();
+            if (bannedUserList == null) {
+                bannedUserList = new ArrayList<>();
+            }
+            if (bannedUserList.contains(userId)) {
+                bannedUserList.remove(userId);
+                restaurant.setBanUserList(bannedUserList);
+                restaurantRepository.save(restaurant);
+            }
+        }
+    }
 
     public List<Long> getLikedRestaurantIdsForUser(String userId) {
         List<Restaurant> likedRestaurants = restaurantRepository.findByLikeUserListContaining(userId);

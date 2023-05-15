@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EmailVerificationController {
 
-        private final EmailVerificationService emailVerificationService;
+    private final EmailVerificationService emailVerificationService;
 
-        @PostMapping("/api/mail/send")
-        @Operation(summary = "이메일 인증 코드 발송 API", description = "이메일 인증 코드를 발송합니다.")
-        public ResponseEntity<Void> sendMailConfirm(@RequestParam String email) throws Exception {
-            emailVerificationService.sendSimpleMessage(email);
-            log.info("인증코드가 발송되었습니다.");
-            return ResponseEntity.ok().build();
-        }
-
-        @PostMapping("/api/mail/verify")
-        @Operation(summary = "이메일 인증 API", description = "이메일 인증을 수행합니다.")
-        public ResponseEntity<Boolean> verifyEmail(@RequestParam String email, @RequestParam String code) {
-            boolean isVerified = emailVerificationService.verifyEmail(email, code);
-            log.info("이메일 인증 결과: " + (isVerified ? "성공" : "실패"));
-            return ResponseEntity.ok(isVerified);
-        }
+    @PostMapping("/api/mail/send")
+    @Operation(summary = "이메일 인증 코드 발송 API", description = "이메일 인증 코드를 발송합니다.")
+    public ResponseEntity<Void> sendMailConfirm(@RequestParam String identifier) throws Exception {
+        emailVerificationService.sendSimpleMessage(identifier);
+        log.info("인증코드가 발송되었습니다.");
+        return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/api/mail/verify")
+    @Operation(summary = "이메일 인증 API", description = "이메일 인증을 수행합니다.")
+    public ResponseEntity<Boolean> verifyEmail(@RequestParam String identifier, @RequestParam String code) {
+        boolean isVerified = emailVerificationService.verifyEmail(identifier, code);
+        log.info("이메일 인증 결과: " + (isVerified ? "성공" : "실패"));
+        return ResponseEntity.ok(isVerified);
+    }
+}

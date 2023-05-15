@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface EmailVerificationRepository extends MongoRepository<EmailVerification, String> {
     Optional<EmailVerification> findFirstByEmailOrderByCreatedAtDesc(String email);
+
+    Optional<EmailVerification> findFirstByEmailAndUserIdOrderByCreatedAtDesc(String email, String userId);
 }
