@@ -161,5 +161,22 @@ public class UserService {
         Optional<User> existingUser = userRepository.findByNickName(nickname);
         return existingUser.isPresent();
     }
+    //비밀번호 변경을 위한 코드
+    public User findByUserId(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElse(null);
+    }
+
+    public boolean updatePassword(String userId, String newPassword) {
+        User user = findByUserId(userId);
+        if (user == null) {
+            return false;
+        }
+
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
+        return true;
+    }
 }
 

@@ -99,16 +99,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
     }
-//    @GetMapping("/authentication-status")
-//    @Operation(summary = "사용자 인증 상태 확인 API", description = "토큰을 이용하여 사용자 인증 상태를 확인합니다.")
-//    public ResponseEntity<String> checkAuthenticationStatus(@RequestHeader("Authorization") String token) {
-//        if (JwtTokenProvider.validateToken(token)) {
-//            return new ResponseEntity<>("인증되었습니다.", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("인증되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-//        }
-//    }
-
     @GetMapping("/userId")
     @Operation(summary = "회원정보 조회 API", description = "신규 사용자를 등록합니다.")
     public ResponseEntity<UserDto> getUserById(@RequestParam("userId") String userId) {
@@ -187,6 +177,22 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/change-password")
+    @Operation(summary = "비밀번호 변경 API", description = "사용자의 비밀번호를 변경합니다.")
+    public ResponseEntity<?> changePassword(@RequestParam String userId,
+                                            @RequestParam String newPassword) {
+        User user = userService.findByUserId(userId);
+        if (user == null) {
+            return new ResponseEntity<>("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND);
+        }
+
+        boolean isUpdated = userService.updatePassword(userId, newPassword);
+        if (isUpdated) {
+            return new ResponseEntity<>("비밀번호가 변경되었습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("비밀번호 변경에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 //    @GetMapping("/profileImage/{userId}")

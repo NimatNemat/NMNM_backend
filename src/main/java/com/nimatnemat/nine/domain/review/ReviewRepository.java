@@ -5,7 +5,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface ReviewRepository extends MongoRepository<Review, Long> {
-    List<Review> findByReviewDetailUserId(String userId);
-    Review findByReviewDetailReviewId(Long reviewId);
+public interface ReviewRepository extends MongoRepository<Review, ObjectId> {
+    List<Review> findByUserId(String userId);
+    Review findByReviewId(Long reviewId);
+    Review findByUserIdAndRestaurantId(String userId, Long restaurantId);
+    void deleteByReviewId(Long reviewId);
+
 }
