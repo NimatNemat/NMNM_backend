@@ -23,8 +23,11 @@
 //}
 package com.nimatnemat.nine.domain.restaurant;
 
+import com.nimatnemat.nine.domain.review.Review;
+import com.nimatnemat.nine.domain.review.ReviewRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +40,10 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/restaurant")
 public class RestaurantController {
-    private final RestaurantService restaurantService;
+    @Autowired
+    private RestaurantService restaurantService;
+    @Autowired
+    private ReviewRepository reviewRepository;  // 추가
 
 //    @GetMapping("/all")
 //    public List<Restaurant> getAllRestaurants() {
@@ -79,6 +85,9 @@ public class RestaurantController {
             } else {
                 restaurant.setImageUrl(null);
             }
+            List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);  // 추가
+            // 필요하다면, 리뷰 정보를 DTO로 변환하는 로직 추가
+            restaurant.setReviews(reviews);  // 추가
             return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");

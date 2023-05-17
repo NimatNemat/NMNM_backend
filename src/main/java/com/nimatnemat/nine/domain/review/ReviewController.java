@@ -67,17 +67,24 @@ public class ReviewController {
     @PutMapping("/updateReview/{reviewId}")
     @Operation(summary = "리뷰 업데이트 API", description = "리뷰를 업데이트합니다.")
     public ResponseEntity<?> updateReview(@PathVariable Long reviewId,
-                                          @RequestBody ReviewDetail reviewDetail,
-                                          @RequestParam(value = "imageUrls", required = false) List<String> imageUrls) {
+                                          @RequestBody ReviewDetail reviewDetail) {
         try {
-            if (imageUrls == null) {
-                imageUrls = new ArrayList<>();
-            }
-            reviewService.updateReview(reviewId, reviewDetail, imageUrls);
+            reviewService.updateReview(reviewId, reviewDetail);
             return new ResponseEntity<>("리뷰가 업데이트되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "사용자 리뷰 조회 API", description = "특정 사용자가 작성한 모든 리뷰를 반환합니다.")
+    public ResponseEntity<?> getAllReviewsByUserId(@PathVariable("userId") String userId) {
+        try {
+            List<Review> userReviews = reviewRepository.findByUserId(userId);
+            return new ResponseEntity<>(userReviews, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

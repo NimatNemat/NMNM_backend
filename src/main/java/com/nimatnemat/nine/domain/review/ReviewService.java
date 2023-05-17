@@ -71,14 +71,15 @@ public class ReviewService {
         reviewRepository.deleteByReviewId(reviewId);
     }
 
-    public void updateReview(Long reviewId, ReviewDetail reviewDetail, List<String> imageUrls) {
+    public void updateReview(Long reviewId, ReviewDetail reviewDetail) {
         Review review = reviewRepository.findByReviewId(reviewId);
         if (review == null) {
             throw new RuntimeException("해당하는 리뷰가 없습니다.");
         }
         review.setReviewInfo(reviewDetail.getReviewInfo());
+        review.setReviewScore(reviewDetail.getReviewScore());
+        review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
-        review.setReviewImage(imageUrls);
         review.setReviewDate(new Date()); // 리뷰 업데이트 날짜도 수정해줍니다.
         reviewRepository.save(review);
     }

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface ReviewRepository extends MongoRepository<Review, ObjectId> {
     List<Review> findByUserId(String userId);
+    List<Review> findByRestaurantId(Long restaurantId);
     Review findByReviewId(Long reviewId);
     Review findByUserIdAndRestaurantId(String userId, Long restaurantId);
     void deleteByReviewId(Long reviewId);
