@@ -45,13 +45,9 @@ public class ReviewController {
     @Operation(summary = "리뷰 작성 API", description = "리뷰를 POST합니다.")
     public ResponseEntity<?> createReview(@RequestParam("userId") String userId,
                                           @RequestParam Long restaurantId,
-                                          @RequestBody ReviewDetail reviewDetail,
-                                          @RequestParam(value = "imageUrls", required = false) List<String> imageUrls) {
+                                          @RequestBody ReviewDetail reviewDetail) {
         try {
-            if (imageUrls == null) {
-                imageUrls = new ArrayList<>();
-            }
-            Review review = reviewService.createReview(userId, restaurantId, reviewDetail, imageUrls);
+            Review review = reviewService.createReview(userId, restaurantId, reviewDetail);
             return new ResponseEntity<>(userId + "님의 리뷰가 작성되었습니다.", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

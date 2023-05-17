@@ -44,7 +44,7 @@ public class ReviewService {
             throw new RuntimeException("이미지를 GridFS에 저장하는 동안 오류가 발생했습니다.", e);
         }
     }
-    public Review createReview(String userId, Long restaurantId, ReviewDetail reviewDetail, List<String> imageUrls) {
+    public Review createReview(String userId, Long restaurantId, ReviewDetail reviewDetail) {
         // ReviewCounter를 조회하고 업데이트
         ReviewCounter reviewCounter = reviewCounterRepository.findById("unique").orElseGet(ReviewCounter::new);
         Long reviewId = reviewCounter.incrementAndGet();
@@ -57,7 +57,7 @@ public class ReviewService {
         // 새 Review 객체를 생성하고 필드를 설정
         review.setUserId(userId);
         review.setRestaurantId(restaurantId); // restaurantId가 int형이므로 변환 필요
-        review.setReviewImage(imageUrls); // 이미지 URL 리스트를 Review에 설정
+        review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
         review.setReviewInfo(reviewDetail.getReviewInfo());
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
         review.setReviewDate(reviewDetail.getReviewDate());
