@@ -57,12 +57,6 @@ public class ReviewService {
         // 새 Review 객체를 생성하고 필드를 설정
         review.setUserId(userId);
         review.setRestaurantId(restaurantId); // restaurantId가 int형이므로 변환 필요
-
-        // 이미지 URL 리스트가 null이라면 새로운 ArrayList를 생성
-        if (imageUrls == null) {
-            imageUrls = new ArrayList<>();
-        }
-
         review.setReviewImage(imageUrls); // 이미지 URL 리스트를 Review에 설정
         review.setReviewInfo(reviewDetail.getReviewInfo());
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
