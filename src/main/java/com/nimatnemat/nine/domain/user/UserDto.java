@@ -17,6 +17,8 @@ public class UserDto {
     private String email;
     private Date birthdate;
     private String groupName;
+    private String infoMessage;
+
 
     public UserDto(User user) {
         this.userId = user.getUserId();
@@ -26,5 +28,6 @@ public class UserDto {
         this.email = user.getEmail();
         this.birthdate = user.getBirthdate();
         this.groupName = user.getGroupName();
+        this.infoMessage = user.getInfoMessage();
     }
 }

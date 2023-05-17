@@ -56,12 +56,9 @@ public class UserController {
             return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
 
-//        if (userService.isNicknameDuplicated(null, registrationDto.getNickName())) {
-//            return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
-//        }
-
         User newUser = userService.register(registrationDto);
         System.out.println("test");
+        userService.initializeUserRatings(newUser.getUserId());  // 새로운 사용자에 대한 초기 평점을 설정합니다.
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
@@ -100,7 +97,7 @@ public class UserController {
         }
     }
     @GetMapping("/userId")
-    @Operation(summary = "회원정보 조회 API", description = "신규 사용자를 등록합니다.")
+    @Operation(summary = "회원정보 조회 API", description = "해당 회원의 정보를 조회합니다.")
     public ResponseEntity<UserDto> getUserById(@RequestParam("userId") String userId) {
         Optional<User> userOptional = userService.getUserById(userId);
         if (userOptional.isPresent()) {
@@ -153,7 +150,6 @@ public class UserController {
     @PutMapping("/update")
     @Operation(summary = "사용자 정보 업데이트 API", description = "사용자 정보를 업데이트합니다.")
     public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestBody UserUpdateDto userUpdateDto) {
-//        String userId = authentication.getName();
 
         if (userService.isEmailDuplicated(userId, userUpdateDto.getEmail())) {
             return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);

@@ -1,6 +1,8 @@
 package com.nimatnemat.nine.domain.review;
 
 import com.mongodb.client.gridfs.GridFSBucket;
+import com.nimatnemat.nine.domain.userRating.UserRating;
+import com.nimatnemat.nine.domain.userRating.UserRatingRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -21,6 +23,8 @@ public class ReviewService {
     private GridFSBucket gridFsBucket;
     @Autowired
     private ReviewCounterRepository reviewCounterRepository;
+    @Autowired
+    private UserRatingRepository userRatingRepository;  // user_rating_table에 접근하기 위한 repository
 
 //    @Autowired
 //    public ReviewService(ReviewRepository reviewRepository) {
@@ -60,6 +64,7 @@ public class ReviewService {
         review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
         review.setReviewInfo(reviewDetail.getReviewInfo());
         review.setReviewScore(reviewDetail.getReviewScore());
+        updateUserRating(userId, restaurantId, reviewDetail.getReviewScore());// 리뷰가 성공적으로 생성된 후에 사용자의 레스토랑 평점을 업데이트합니다.
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
         review.setReviewDate(new Date());
 
@@ -83,7 +88,15 @@ public class ReviewService {
         review.setReviewDate(new Date()); // 리뷰 업데이트 날짜도 수정해줍니다.
         reviewRepository.save(review);
     }
-
+    public void updateUserRating(String userId, Long restaurantId, int newRating) {
+        UserRating userRating = userRatingRepository.findByUserIdAndRestaurantId(userId, restaurantId);
+        if (userRating != null) {
+            userRating.setRating(newRating);
+            userRatingRepository.save(userRating);
+        } else {
+            // 해당하는 UserRating이 없는 경우에 대한 처리 코드를 여기에 추가할 수 있습니다.
+        }
+    }
 //    private void saveUserRating(String userId, Long restaurantId, int rating) {
 //        UserRating userRating = new UserRating();
 //        userRating.setUserId(userId);
