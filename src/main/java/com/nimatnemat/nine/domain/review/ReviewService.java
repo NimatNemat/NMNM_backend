@@ -59,8 +59,9 @@ public class ReviewService {
         review.setRestaurantId(restaurantId); // restaurantId가 int형이므로 변환 필요
         review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
         review.setReviewInfo(reviewDetail.getReviewInfo());
+        review.setReviewScore(reviewDetail.getReviewScore());
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
-        review.setReviewDate(reviewDetail.getReviewDate());
+        review.setReviewDate(new Date());
 
         // Review 객체를 데이터베이스에 저장하고 반환
         return reviewRepository.save(review);

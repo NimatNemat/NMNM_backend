@@ -21,6 +21,7 @@ public class Review {
     private Long restaurantId;
     private String userId;  // 리뷰 작성자의 아이디를 저장하기 위한 필드 추가
     private String reviewInfo;
+    private Long reviewScore;
     private int simpleEvaluation;
     private Date reviewDate;
     private List<String> reviewImage;

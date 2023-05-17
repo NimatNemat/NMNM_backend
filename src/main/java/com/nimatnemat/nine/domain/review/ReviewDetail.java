@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ReviewDetail {
     private String reviewInfo;
+    private Long reviewScore;
     private int simpleEvaluation;
     private Date reviewDate;
     private List<String> reviewImage;
