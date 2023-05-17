@@ -5,6 +5,8 @@ import com.nimatnemat.nine.domain.userRating.UserRating;
 import com.nimatnemat.nine.domain.userRating.UserRatingRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewService {
@@ -21,6 +24,8 @@ public class ReviewService {
     private  ReviewRepository reviewRepository;
     @Autowired
     private GridFSBucket gridFsBucket;
+    @Autowired
+    private GridFsTemplate gridFsTemplate; // GridFS를 사용하기 위한 의존성 주입
     @Autowired
     private ReviewCounterRepository reviewCounterRepository;
     @Autowired
@@ -73,20 +78,34 @@ public class ReviewService {
     }
 
     public void deleteReview(Long reviewId) {
-        reviewRepository.deleteByReviewId(reviewId);
-    }
+        Optional<Review> reviewOptional = reviewRepository.findByReviewId(reviewId);
+        if(reviewOptional.isPresent()){
+            Review review = reviewOptional.get();
+            List<String> reviewImages = review.getReviewImage();
 
+            // 리뷰에 연결된 모든 이미지를 삭제
+            for(String imageId : reviewImages){
+                // ObjectId를 사용하여 GridFS에서 이미지 삭제
+                gridFsTemplate.delete(new Query(Criteria.where("_id").is(new ObjectId(imageId))));
+            }
+
+            // 리뷰를 삭제
+            reviewRepository.deleteByReviewId(reviewId);
+        }
+    }
     public void updateReview(Long reviewId, ReviewDetail reviewDetail) {
-        Review review = reviewRepository.findByReviewId(reviewId);
-        if (review == null) {
+        Optional<Review> reviewOptional = reviewRepository.findByReviewId(reviewId);
+        if (!reviewOptional.isPresent()) {
             throw new RuntimeException("해당하는 리뷰가 없습니다.");
         }
+        Review review = reviewOptional.get();
         review.setReviewInfo(reviewDetail.getReviewInfo());
         review.setReviewScore(reviewDetail.getReviewScore());
         review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
         review.setReviewDate(new Date()); // 리뷰 업데이트 날짜도 수정해줍니다.
         reviewRepository.save(review);
+        updateUserRating(review.getUserId(), review.getRestaurantId(), reviewDetail.getReviewScore());
     }
     public void updateUserRating(String userId, Long restaurantId, int newRating) {
         UserRating userRating = userRatingRepository.findByUserIdAndRestaurantId(userId, restaurantId);
