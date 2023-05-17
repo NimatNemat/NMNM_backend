@@ -31,7 +31,7 @@ public class AuthenticationConfig implements WebMvcConfigurer {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests() // 다음 리퀘스트에 대한 사용권한 체크
-                .requestMatchers("/api/users/**").permitAll()
+                .requestMatchers("/api/users/**","/api/mail/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 스프링 시큐리티가 세션 쿠키 방식으로 동작하지 않도록 설정
