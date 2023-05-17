@@ -27,9 +27,9 @@ public class EmailVerificationController {
 
     @PostMapping("/api/mail/verify")
     @Operation(summary = "이메일 인증 API", description = "이메일 인증을 수행합니다.")
-    public ResponseEntity<Boolean> verifyEmail(@RequestParam String identifier, @RequestParam String code) {
-        boolean isVerified = emailVerificationService.verifyEmail(identifier, code);
-        log.info("이메일 인증 결과: " + (isVerified ? "성공" : "실패"));
-        return ResponseEntity.ok(isVerified);
+    public ResponseEntity<String> verifyEmail(@RequestParam String identifier, @RequestParam String code) {
+        String userId = emailVerificationService.verifyEmail(identifier, code);
+        log.info("이메일 인증 결과: " + (userId != null ? "성공" : "실패"));
+        return ResponseEntity.ok(userId);
     }
 }

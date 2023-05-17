@@ -66,7 +66,7 @@ public class EmailVerificationService {
 
     public String sendSimpleMessage(String identifier) throws Exception {
         Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
-        if(optionalUser.isEmpty()) {
+        if (optionalUser.isEmpty()) {
             throw new Exception("User with identifier " + identifier + " not found.");
         }
         User user = optionalUser.get();
@@ -84,10 +84,10 @@ public class EmailVerificationService {
         return verificationCode;
     }
 
-    public boolean verifyEmail(String identifier, String inputCode) {
+    public String verifyEmail(String identifier, String inputCode) {
         Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
-        if(optionalUser.isEmpty()) {
-            return false;
+        if (optionalUser.isEmpty()) {
+            return null;
         }
         User user = optionalUser.get();
         Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findFirstByEmailAndUserIdOrderByCreatedAtDesc(user.getEmail(), user.getUserId());
@@ -99,10 +99,32 @@ public class EmailVerificationService {
 
                 emailVerification.setVerified(true);
                 emailVerificationRepository.save(emailVerification);
-                return true;
+                return user.getUserId();  // 이메일 인증이 성공했을 때, 해당 사용자의 userId를 반환
             }
         }
 
-        return false;
+        return null;  // 인증에 실패했을 때, null 반환
     }
 }
+//    public boolean verifyEmail(String identifier, String inputCode) {
+//        Optional<User> optionalUser = userRepository.findByIdentifier(identifier);
+//        if(optionalUser.isEmpty()) {
+//            return false;
+//        }
+//        User user = optionalUser.get();
+//        Optional<EmailVerification> optionalEmailVerification = emailVerificationRepository.findFirstByEmailAndUserIdOrderByCreatedAtDesc(user.getEmail(), user.getUserId());
+//
+//        if (optionalEmailVerification.isPresent()) {
+//            EmailVerification emailVerification = optionalEmailVerification.get();
+//            if (emailVerification.getVerificationCode().equals(inputCode) &&
+//                    LocalDateTime.now().isBefore(emailVerification.getExpiresAt())) {
+//
+//                emailVerification.setVerified(true);
+//                emailVerificationRepository.save(emailVerification);
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+

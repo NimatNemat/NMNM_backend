@@ -31,6 +31,16 @@ public class RecommendedController {
         if (recommendations.isPresent() && !recommendations.get().isEmpty()) {
             List<Long> firstRecommendIds = recommendations.get().get(0).getFirstRecommend().stream().map(Long::valueOf).collect(Collectors.toList());
             List<Restaurant> firstRecommendRestaurants = restaurantService.getRestaurantsByRestaurantIds(firstRecommendIds);
+
+            firstRecommendRestaurants.forEach(restaurant -> {
+                if (restaurant.getImageFile() != null) {
+                    String imageUrl = String.format("/images/%s", restaurant.getImageFile().toHexString());
+                    restaurant.setImageUrl(imageUrl);
+                } else {
+                    restaurant.setImageUrl(null);
+                }
+            });
+
             return new ResponseEntity<>(firstRecommendRestaurants, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -45,6 +55,16 @@ public class RecommendedController {
         if (recommendations.isPresent() && !recommendations.get().isEmpty()) {
             List<Long> secondRecommendIds = recommendations.get().get(0).getSecondRecommend().stream().map(Long::valueOf).collect(Collectors.toList());
             List<Restaurant> secondRecommendRestaurants = restaurantService.getRestaurantsByRestaurantIds(secondRecommendIds);
+
+            secondRecommendRestaurants.forEach(restaurant -> {
+                if (restaurant.getImageFile() != null) {
+                    String imageUrl = String.format("/images/%s", restaurant.getImageFile().toHexString());
+                    restaurant.setImageUrl(imageUrl);
+                } else {
+                    restaurant.setImageUrl(null);
+                }
+            });
+
             return new ResponseEntity<>(secondRecommendRestaurants, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
