@@ -22,6 +22,7 @@ import java.util.List;
 public class TastePlaylist {
     @Id
     private ObjectId _id;
+    private Long tastePlaylistId;
     private String userId;
     private String tastePlaylistName;
     private String tastePlaylistDesc;
@@ -29,7 +30,8 @@ public class TastePlaylist {
     private int publicOrPrivate;
     private List<Long> playlistDetail;
 
-    public TastePlaylist(String userId, String tasteplaylistName, String tastePlaylistDesc, Date createdAt, int publicOrPrivate, List<Long> playlistDetail){
+    public TastePlaylist(Long tastePlaylistId, String userId, String tasteplaylistName, String tastePlaylistDesc, Date createdAt, int publicOrPrivate, List<Long> playlistDetail){
+        this.tastePlaylistId = tastePlaylistId;
         this.userId = userId;
         this.tastePlaylistName = tasteplaylistName;
         this.tastePlaylistDesc = tastePlaylistDesc;

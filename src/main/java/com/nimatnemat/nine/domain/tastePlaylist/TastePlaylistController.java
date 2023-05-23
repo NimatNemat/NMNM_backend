@@ -52,9 +52,9 @@ public class TastePlaylistController {
 
     @PostMapping("/deleteTastePlaylist")
     @Operation(summary = "맛플리 삭제 API", description = "맛플리를 삭제합니다")
-    public ResponseEntity<?> deleteTastePlaylist(@RequestParam String playlistId){
+    public ResponseEntity<?> deleteTastePlaylist(@RequestParam Long playlistId){
         try{
-            tastePlaylistService.deleteTastePlaylist(new ObjectId(playlistId));
+            tastePlaylistService.deleteTastePlaylist(playlistId);
             return new ResponseEntity<>("맛플리를 삭제하였습니다",HttpStatus.OK);
         }
         catch(Exception e){
@@ -64,9 +64,9 @@ public class TastePlaylistController {
 
     @PostMapping("/addDetail")
     @Operation(summary = "맛플리 세부사항 추가 API", description = "맛플리 세부사항을 추가합니다")
-    public ResponseEntity<?> addDetail(@RequestParam String playlistId, @RequestParam long restaurantId){
+    public ResponseEntity<?> addDetail(@RequestParam Long playlistId, @RequestParam long restaurantId){
         try{
-            tastePlaylistService.addDetail(new ObjectId(playlistId), restaurantId);
+            tastePlaylistService.addDetail(playlistId, restaurantId);
             return new ResponseEntity<>("해당 맛플리에서 "+restaurantId+ "를 추가하였습니다",HttpStatus.OK);
         }
         catch(Exception e){
@@ -76,9 +76,9 @@ public class TastePlaylistController {
 
     @PostMapping("/deleteDetail")
     @Operation(summary = "맛플리 세부사항 삭제 API",description = "맛플리 세부사항을 삭제합니다")
-    public ResponseEntity<?> deleteDetail(@RequestParam String playlistId, @RequestParam long restaurantId){
+    public ResponseEntity<?> deleteDetail(@RequestParam Long playlistId, @RequestParam long restaurantId){
         try{
-            tastePlaylistService.deleteDetail(new ObjectId(playlistId), restaurantId);
+            tastePlaylistService.deleteDetail(playlistId, restaurantId);
             return new ResponseEntity<>("해당 맛플리에서 "+restaurantId+ "를 삭제하였습니다",HttpStatus.OK);
         }
         catch(Exception e){
@@ -100,9 +100,9 @@ public class TastePlaylistController {
 
     @GetMapping("/getDetail/{playlistId}")
     @Operation(summary = "맛플리 세부정보의 레스토랑 객체 반환 API", description = "맛플리 세부정보에 있는 레스토랑 아이디를 확인하여 해당 아이디에 맞는 레스토랑 객체를 제공합니다")
-    public ResponseEntity<?> getPlaylistDetail(@PathVariable String playlistId) {
+    public ResponseEntity<?> getPlaylistDetail(@PathVariable Long playlistId) {
         try {
-            List<Long> detail = tastePlaylistService.getPlaylistDetail(new ObjectId(playlistId));
+            List<Long> detail = tastePlaylistService.getPlaylistDetail(playlistId);
             List<Restaurant> restaurantList = getRestaurantList(detail);
 
             restaurantList.forEach(restaurant -> {

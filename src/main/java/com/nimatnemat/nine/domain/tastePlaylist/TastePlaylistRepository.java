@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.swing.text.html.Option;
 public interface TastePlaylistRepository extends MongoRepository<TastePlaylist, ObjectId>  {
     TastePlaylist findBy_id(ObjectId _id);
+    TastePlaylist findByTastePlaylistId(Long tastePlaylistId);
 
     List<TastePlaylist> findByUserId(String userId);
 }
