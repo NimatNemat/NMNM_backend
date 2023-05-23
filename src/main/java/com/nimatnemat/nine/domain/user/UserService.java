@@ -100,7 +100,6 @@ public class UserService {
             User user = userOptional.get();
             user.setGender(userUpdateDto.getGender());
             user.setNickName(userUpdateDto.getNickName());
-            user.setEmail(userUpdateDto.getEmail());
             user.setBirthdate(userUpdateDto.getBirthdate());
             user.setGroupName(userUpdateDto.getGroupName());
             return userRepository.save(user);
@@ -174,7 +173,22 @@ public class UserService {
         return userRepository.findByUserId(userId)
                 .orElse(null);
     }
+    public boolean updateEmail(String userId, String newEmail) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return false;
+        }
 
+        User user = userOptional.get();
+        user.setEmail(newEmail);
+
+        try {
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     public boolean updatePassword(String userId, String newPassword) {
         User user = findByUserId(userId);
         if (user == null) {
@@ -186,6 +200,7 @@ public class UserService {
         userRepository.save(user);
         return true;
     }
+
     public void initializeUserRatings(String userId) {
         List<Restaurant> allRestaurants = restaurantRepository.findAll();  // 모든 레스토랑을 가져옵니다.
         for (Restaurant restaurant : allRestaurants) {

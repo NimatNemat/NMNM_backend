@@ -100,7 +100,7 @@ public class TastePlaylistController {
 
     @GetMapping("/getDetail/{playlistId}")
     @Operation(summary = "맛플리 세부정보의 레스토랑 객체 반환 API", description = "맛플리 세부정보에 있는 레스토랑 아이디를 확인하여 해당 아이디에 맞는 레스토랑 객체를 제공합니다")
-    public ResponseEntity<?> getDetail(@PathVariable String playlistId) {
+    public ResponseEntity<?> getPlaylistDetail(@PathVariable String playlistId) {
         try {
             List<Long> detail = tastePlaylistService.getPlaylistDetail(new ObjectId(playlistId));
             List<Restaurant> restaurantList = getRestaurantList(detail);

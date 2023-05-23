@@ -151,9 +151,9 @@ public class UserController {
     @Operation(summary = "사용자 정보 업데이트 API", description = "사용자 정보를 업데이트합니다.")
     public ResponseEntity<?> updateUser(@RequestParam String userId, @RequestBody UserUpdateDto userUpdateDto) {
 
-        if (userService.isEmailDuplicated(userId, userUpdateDto.getEmail())) {
-            return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
-        }
+//        if (userService.isEmailDuplicated(userId, userUpdateDto.getEmail())) {
+//            return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
+//        }
         if (userService.isNicknameDuplicated(userId, userUpdateDto.getNickName())) {
             return new ResponseEntity<>("이미 사용 중인 닉네임입니다.", HttpStatus.BAD_REQUEST);
         }
@@ -173,6 +173,26 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/change-email")
+    @Operation(summary = "이메일 변경 API", description = "사용자의 이메일을 변경합니다.")
+    public ResponseEntity<?> changeEmail(Authentication authentication,
+                                         @RequestParam String newEmail) {
+        User user = userService.findByUserId(authentication.getName());
+        if (user == null) {
+            return new ResponseEntity<>("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND);
+        }
+
+        if (userService.isEmailDuplicated(authentication.getName(), newEmail)) {
+            return new ResponseEntity<>("이미 사용 중인 이메일입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        boolean isUpdated = userService.updateEmail(authentication.getName(), newEmail);
+        if (isUpdated) {
+            return new ResponseEntity<>("이메일이 변경되었습니다.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("이메일 변경에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PutMapping("/change-password")

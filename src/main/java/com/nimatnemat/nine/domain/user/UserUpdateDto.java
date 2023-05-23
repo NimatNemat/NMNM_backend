@@ -13,7 +13,6 @@ import java.util.Date;
 public class UserUpdateDto {
     private Long gender;
     private String nickName;
-    private String email;
     private Date birthdate;
     private String groupName;
     private String infoMessage;
