@@ -5,6 +5,7 @@ import com.nimatnemat.nine.domain.userRating.UserRating;
 import com.nimatnemat.nine.domain.userRating.UserRatingRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
@@ -26,6 +27,8 @@ public class ReviewService {
     private GridFSBucket gridFsBucket;
     @Autowired
     private GridFsTemplate gridFsTemplate; // GridFS를 사용하기 위한 의존성 주입
+    @Autowired
+    private MongoTemplate mongoTemplate;
     @Autowired
     private ReviewCounterRepository reviewCounterRepository;
     @Autowired
@@ -84,9 +87,11 @@ public class ReviewService {
             List<String> reviewImages = review.getReviewImage();
 
             // 리뷰에 연결된 모든 이미지를 삭제
-            for(String imageId : reviewImages){
+            for(String imageUrl : reviewImages){
+                String imageId = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
                 // ObjectId를 사용하여 GridFS에서 이미지 삭제
                 gridFsTemplate.delete(new Query(Criteria.where("_id").is(new ObjectId(imageId))));
+                mongoTemplate.remove(new Query(Criteria.where("_id").is(new ObjectId(imageId))), "fs.files");
             }
 
             // 리뷰를 삭제
