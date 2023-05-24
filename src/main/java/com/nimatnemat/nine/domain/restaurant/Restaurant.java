@@ -31,7 +31,7 @@ public class Restaurant {
     private String roadAddress;
     private String number;
     private String businessHours;
-    private List<List<String>> tags;
+    private List<String> tags;
     @Field("imageFile")
     private ObjectId imageFile;
     private List<List<String>> menu;
