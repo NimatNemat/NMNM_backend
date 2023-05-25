@@ -1,5 +1,7 @@
 package com.nimatnemat.nine.domain.review;
 
+import com.nimatnemat.nine.domain.restaurant.RestaurantService;
+import com.nimatnemat.nine.domain.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,11 @@ import java.util.List;
 public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final ReviewService reviewService;
+
+    @Autowired
+    public UserService userService;
+    @Autowired
+    public RestaurantService restaurantService;
 
     @Autowired
     public ReviewController(ReviewRepository reviewRepository, ReviewService reviewService) {
@@ -80,7 +87,19 @@ public class ReviewController {
     public ResponseEntity<?> getAllReviewsByUserId(@PathVariable("userId") String userId) {
         try {
             List<Review> userReviews = reviewRepository.findByUserId(userId);
-            return new ResponseEntity<>(userReviews, HttpStatus.OK);
+            List<ReviewDto> reviewDtoList = new ArrayList<>();
+
+            for (Review review : userReviews) {
+                String userNickName = userService.getUserNickName(review.getUserId());
+                String restaurantName = restaurantService.getRestaurantName(review.getRestaurantId());
+
+                review.setUserNickName(userNickName);
+                review.setRestaurantName(restaurantName);
+
+                ReviewDto reviewDto = new ReviewDto(review);
+                reviewDtoList.add(reviewDto);
+            }
+            return new ResponseEntity<>(reviewDtoList, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -211,5 +211,14 @@ public class UserService {
             userRatingRepository.save(userRating);  // 각 레스토랑에 대한 초기 사용자 평점을 데이터베이스에 저장합니다.
         }
     }
+    public String getUserNickName(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getNickName();
+        } else {
+            throw new RuntimeException("유저를 찾을 수 없습니다.");
+        }
+    }
 }
 

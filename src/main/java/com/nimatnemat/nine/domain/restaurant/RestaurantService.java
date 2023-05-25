@@ -36,6 +36,15 @@ public class RestaurantService {
         Optional<Restaurant> restaurantOpt = restaurantRepository.findByRestaurantId(restaurantId);
         return restaurantOpt.orElse(null);
     }
+    public String getRestaurantName(Long restaurantId) {
+        Optional<Restaurant> restaurantOptional = restaurantRepository.findByRestaurantId(restaurantId);
+        if (restaurantOptional.isPresent()) {
+            Restaurant restaurant = restaurantOptional.get();
+            return restaurant.getName();
+        } else {
+            throw new RuntimeException("식당을 찾을 수 없습니다.");
+        }
+    }
 }
 
 
