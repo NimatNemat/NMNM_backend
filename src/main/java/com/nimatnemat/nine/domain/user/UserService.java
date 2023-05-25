@@ -100,6 +100,7 @@ public class UserService {
             User user = userOptional.get();
             user.setNickName(userUpdateDto.getNickName());
 //            user.setGroupName(userUpdateDto.getGroupName());
+            user.setInfoMessage(userUpdateDto.getInfoMessage());
             return userRepository.save(user);
         } else {
             return null;
