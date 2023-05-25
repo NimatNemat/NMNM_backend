@@ -11,10 +11,8 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class UserUpdateDto {
-    private Long gender;
     private String nickName;
-    private Date birthdate;
-    private String groupName;
+//    private String groupName;
     private String infoMessage;
     // 생성자, getter, setter 생략
 }

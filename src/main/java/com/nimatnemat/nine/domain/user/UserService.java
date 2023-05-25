@@ -98,10 +98,8 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            user.setGender(userUpdateDto.getGender());
             user.setNickName(userUpdateDto.getNickName());
-            user.setBirthdate(userUpdateDto.getBirthdate());
-            user.setGroupName(userUpdateDto.getGroupName());
+//            user.setGroupName(userUpdateDto.getGroupName());
             return userRepository.save(user);
         } else {
             return null;
@@ -168,27 +166,28 @@ public class UserService {
         Optional<User> existingUser = userRepository.findByNickName(nickname);
         return existingUser.isPresent();
     }
-    //비밀번호 변경을 위한 코드
     public User findByUserId(String userId) {
         return userRepository.findByUserId(userId)
                 .orElse(null);
     }
     public boolean updateEmail(String userId, String newEmail) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (!userOptional.isPresent()) {
+        User user = findByUserId(userId);
+        if (user == null) {
             return false;
         }
 
-        User user = userOptional.get();
         user.setEmail(newEmail);
 
         try {
             userRepository.save(user);
             return true;
         } catch (Exception e) {
+            // 이 부분에서 어떤 오류가 발생하는지 로그로 확인할 수 있도록 추가하는 것이 좋습니다.
+            e.printStackTrace();
             return false;
         }
     }
+    //비밀번호 변경을 위한 코드
     public boolean updatePassword(String userId, String newPassword) {
         User user = findByUserId(userId);
         if (user == null) {
