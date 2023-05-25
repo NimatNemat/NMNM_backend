@@ -50,7 +50,7 @@ public class ReviewService {
             ObjectId objectId = gridFsBucket.uploadFromStream(filename, inputStream);
 
             // 저장된 이미지의 URL을 생성하고 반환합니다.
-            String imageUrl = String.format("http://15.165.161.104:8080/images/%s", objectId.toString());
+            String imageUrl = String.format("/images/%s", objectId.toString());
             return imageUrl;
         } catch (IOException e) {
             throw new RuntimeException("이미지를 GridFS에 저장하는 동안 오류가 발생했습니다.", e);

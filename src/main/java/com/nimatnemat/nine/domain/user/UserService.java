@@ -79,7 +79,7 @@ public class UserService {
 
             // 저장된 이미지의 URL을 생성하고 반환합니다. 실제로는 아래 예시와 같이 도메인을 사용하여 이미지를 접근할 수 있는 URL을 생성해야 합니다.
             // 예: https://example.com/images/{objectId}
-            String imageUrl = String.format("http://15.165.161.104:8080/images/%s", objectId.toString());
+            String imageUrl = String.format("/images/%s", objectId.toString());
             return imageUrl;
         } catch (IOException e) {
             throw new RuntimeException("이미지를 GridFS에 저장하는 동안 오류가 발생했습니다.", e);
