@@ -1,6 +1,7 @@
 package com.nimatnemat.nine.domain.restaurant;
 
 import com.nimatnemat.nine.domain.review.Review;
+import com.nimatnemat.nine.domain.review.ReviewDto;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -41,5 +42,8 @@ public class Restaurant {
     @Transient
     private String imageUrl;
     @Transient  // DB에 저장하지 않는 필드를 표시
-    private List<Review> reviews;  // 추가
+    private List<ReviewDto> reviews;  // 추가
+    public void setReviews(List<ReviewDto> reviews) {
+        this.reviews = reviews;
+    }
 }

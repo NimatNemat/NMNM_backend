@@ -24,7 +24,9 @@
 package com.nimatnemat.nine.domain.restaurant;
 
 import com.nimatnemat.nine.domain.review.Review;
+import com.nimatnemat.nine.domain.review.ReviewDto;
 import com.nimatnemat.nine.domain.review.ReviewRepository;
+import com.nimatnemat.nine.domain.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +45,8 @@ import java.util.Optional;
 public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private ReviewRepository reviewRepository;  // 추가
 
@@ -85,9 +90,19 @@ public class RestaurantController {
             } else {
                 restaurant.setImageUrl(null);
             }
-            List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);  // 추가
-            // 필요하다면, 리뷰 정보를 DTO로 변환하는 로직 추가
-            restaurant.setReviews(reviews);  // 추가
+            List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
+            List<ReviewDto> reviewDtoList = new ArrayList<>();
+
+            for (Review review : reviews) {
+                String userNickName = userService.getUserNickName(review.getUserId());
+                review.setUserNickName(userNickName);
+                review.setRestaurantName(restaurant.getName());
+                ReviewDto reviewDto = new ReviewDto(review);
+                reviewDtoList.add(reviewDto);
+            }
+
+            restaurant.setReviews(reviewDtoList);
+
             return ResponseEntity.ok(restaurant);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Restaurant not found");
