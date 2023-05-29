@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "user_table")
 @Getter
@@ -28,7 +29,7 @@ public class User {
     private Date birthdate;
     private String groupName;
     private String infoMessage;
-
+    private List<Long> secondRecommend;
 
     public User(String userId, Long gender, String password, String nickName,  String profileImage, String email, Date birthdate, String groupName) {
         this.userId = userId;
