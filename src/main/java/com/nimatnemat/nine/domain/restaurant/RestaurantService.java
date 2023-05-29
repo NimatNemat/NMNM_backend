@@ -1,6 +1,9 @@
 package com.nimatnemat.nine.domain.restaurant;
 
+import com.nimatnemat.nine.domain.review.Review;
+import com.nimatnemat.nine.domain.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,6 +14,8 @@ import java.util.Optional;
 @Service
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
+    @Autowired
+    public ReviewRepository reviewRepository;
 
     public RestaurantService(RestaurantRepository restaurantRepository) {
         this.restaurantRepository = restaurantRepository;
@@ -43,6 +48,21 @@ public class RestaurantService {
             return restaurant.getName();
         } else {
             throw new RuntimeException("식당을 찾을 수 없습니다.");
+        }
+    }
+    public void updateAveragePreference(Long restaurantId) {
+        List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
+        if (!reviews.isEmpty()) {
+            double totalScore = 0;
+            for (Review review : reviews) {
+                totalScore += review.getReviewScore();
+            }
+            double averagePreference = totalScore / reviews.size();
+            Restaurant restaurant = restaurantRepository.findByRestaurantId(restaurantId).orElse(null);
+            if (restaurant != null) {
+                restaurant.setAvgPreference(averagePreference);
+                restaurantRepository.save(restaurant);
+            }
         }
     }
 }

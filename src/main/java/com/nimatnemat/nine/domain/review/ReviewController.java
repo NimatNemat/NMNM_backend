@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -55,6 +56,7 @@ public class ReviewController {
                                           @RequestBody ReviewDetail reviewDetail) {
         try {
             Review review = reviewService.createReview(userId, restaurantId, reviewDetail);
+            restaurantService.updateAveragePreference(restaurantId);
             return new ResponseEntity<>(userId + "님의 리뷰가 작성되었습니다.", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,8 +78,15 @@ public class ReviewController {
     public ResponseEntity<?> updateReview(@PathVariable Long reviewId,
                                           @RequestBody ReviewDetail reviewDetail) {
         try {
-            reviewService.updateReview(reviewId, reviewDetail);
-            return new ResponseEntity<>("리뷰가 업데이트되었습니다.", HttpStatus.OK);
+            Optional<Review> optionalReview = reviewRepository.findByReviewId(reviewId);
+            if (optionalReview.isPresent()) {
+                Review review = optionalReview.get();
+                reviewService.updateReview(reviewId, reviewDetail);
+                restaurantService.updateAveragePreference(review.getRestaurantId());
+                return new ResponseEntity<>("리뷰가 업데이트되었습니다.", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("리뷰를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
