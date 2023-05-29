@@ -121,6 +121,10 @@ public class ReviewService {
             // 해당하는 UserRating이 없는 경우에 대한 처리 코드를 여기에 추가할 수 있습니다.
         }
     }
+    public Review getReviewById(Long reviewId) {
+        return reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 리뷰가 존재하지 않습니다."));
+    }
 //    private void saveUserRating(String userId, Long restaurantId, int rating) {
 //        UserRating userRating = new UserRating();
 //        userRating.setUserId(userId);

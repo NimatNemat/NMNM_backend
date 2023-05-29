@@ -66,12 +66,16 @@ public class ReviewController {
     @Operation(summary = "리뷰 삭제 API", description = "리뷰를 삭제합니다.")
     public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
         try {
+            Review review = reviewService.getReviewById(reviewId);  // getReviewById 메소드가 필요합니다.
+            Long restaurantId = review.getRestaurantId();
             reviewService.deleteReview(reviewId);
+            restaurantService.updateAveragePreference(restaurantId);
             return new ResponseEntity<>("리뷰가 삭제되었습니다.", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping("/updateReview/{reviewId}")
     @Operation(summary = "리뷰 업데이트 API", description = "리뷰를 업데이트합니다.")
@@ -113,6 +117,4 @@ public class ReviewController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 }
