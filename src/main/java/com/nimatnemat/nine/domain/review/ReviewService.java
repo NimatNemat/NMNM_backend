@@ -113,10 +113,12 @@ public class ReviewService {
         updateUserRating(review.getUserId(), review.getRestaurantId(), reviewDetail.getReviewScore());
     }
     public void updateUserRating(String userId, Long restaurantId, int newRating) {
-        UserRating userRating = userRatingRepository.findByUserIdAndRestaurantId(userId, restaurantId);
-        if (userRating != null) {
-            userRating.setRating(newRating);
-            userRatingRepository.save(userRating);
+        List<UserRating> userRatings = userRatingRepository.findByUserIdAndRestaurantId(userId, restaurantId);
+        if (!userRatings.isEmpty()) {
+            for (UserRating userRating : userRatings) {
+                userRating.setRating(newRating);
+                userRatingRepository.save(userRating);
+            }
         } else {
             // 해당하는 UserRating이 없는 경우에 대한 처리 코드를 여기에 추가할 수 있습니다.
         }
