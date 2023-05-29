@@ -91,20 +91,18 @@ public class RecommendedController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/groupChoice")
     @Operation(summary = "그룹 별 상위 10개 음식점 정보 제공 API", description = "회원가입 절차 중 그룹 선택 시 보여질 그룹 별 음식점 정보를 제공합니다")
     public ResponseEntity<List<Restaurant>> getGroupChoiceList() {
         try {
             List<Group> groups = groupRepository.findAll();
-            List<Long> allGroupRecommendIds = new ArrayList<>();
+            List<Restaurant> groupChoiceRestaurants = new ArrayList<>();
 
             for (Group group : groups) {
                 List<Long> firstRecommendIds = group.getFirstRecommend();
-                allGroupRecommendIds.addAll(firstRecommendIds.subList(0, Math.min(firstRecommendIds.size(), 10)));
+                List<Restaurant> groupRestaurants = restaurantService.getRestaurantsByRestaurantIds(firstRecommendIds.subList(0, Math.min(firstRecommendIds.size(), 10)));
+                groupChoiceRestaurants.addAll(groupRestaurants);
             }
-
-            List<Restaurant> groupChoiceRestaurants = restaurantService.getRestaurantsByRestaurantIds(allGroupRecommendIds);
 
             groupChoiceRestaurants.forEach(restaurant -> {
                 if (restaurant.getImageFile() != null) {
@@ -121,7 +119,6 @@ public class RecommendedController {
         }
     }
 }
-
 //    @GetMapping("/first")
 //    @Operation(summary = "사용자별 첫 번째 추천 레스토랑 조회 API", description = "사용자 ID에 따라 첫 번째 추천 레스토랑 목록을 반환합니다.")
 //    public ResponseEntity<List<String>> getFirstRecommendationsByUserId(@RequestParam("userId") String userId) {
