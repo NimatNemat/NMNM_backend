@@ -18,7 +18,7 @@ public class ThirdController {
     @Operation(summary = "세 번째 추천 API", description = "클라이언트에서 문자열 배열을 받아서 해당 데이터를 Flask 서버로 POST하고, 그 결과를 반환합니다.")
     public String thirdRecommend(@RequestBody String[] values) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://15.165.161.104:5000/thirdRecommend";
+        String url = "http://43.200.176.52:5000/thirdRecommend";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
