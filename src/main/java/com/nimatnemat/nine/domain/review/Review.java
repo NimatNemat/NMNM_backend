@@ -22,6 +22,7 @@ public class Review {
     private String userId;  // 리뷰 작성자의 아이디를 저장하기 위한 필드 추가
     private String restaurantName;
     private String userNickName;
+    private String profileImage;
     private String reviewInfo;
     private int reviewScore;
     private int simpleEvaluation;

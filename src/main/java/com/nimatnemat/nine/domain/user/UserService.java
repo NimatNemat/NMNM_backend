@@ -220,5 +220,14 @@ public class UserService {
             throw new RuntimeException("유저를 찾을 수 없습니다.");
         }
     }
+    public String getUserProfileImage(String userId) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getProfileImage();
+        } else {
+            throw new RuntimeException("유저를 찾을 수 없습니다.");
+        }
+    }
 }
 
