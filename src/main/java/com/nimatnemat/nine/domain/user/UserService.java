@@ -3,6 +3,7 @@ package com.nimatnemat.nine.domain.user;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.nimatnemat.nine.domain.restaurant.Restaurant;
 import com.nimatnemat.nine.domain.restaurant.RestaurantRepository;
+import com.nimatnemat.nine.domain.tastePlaylist.TastePlaylistRepository;
 import com.nimatnemat.nine.domain.userRating.UserRating;
 import com.nimatnemat.nine.domain.userRating.UserRatingRepository;
 import org.bson.types.ObjectId;
@@ -31,6 +32,8 @@ public class UserService {
     private RestaurantRepository restaurantRepository;  // 모든 레스토랑을 가져오기 위한 repository
     @Autowired
     private UserRatingRepository userRatingRepository;  // user_rating_table에 접근하기 위한 repository
+    @Autowired
+    private TastePlaylistRepository tastePlaylistRepository;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -110,12 +113,29 @@ public class UserService {
     public boolean deleteUser(String userId) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         if (userOptional.isPresent()) {
+            // TastePlaylist와 UserRating 삭제
+            tastePlaylistRepository.deleteByUserId(userId);
+            userRatingRepository.deleteByUserId(userId);
+
             userRepository.delete(userOptional.get());
             return true;
         } else {
             return false;
         }
     }
+//    public boolean deleteUser(String userId) {
+//        Optional<User> userOptional = userRepository.findByUserId(userId);
+//        if (userOptional.isPresent()) {
+//            // TastePlaylist와 UserRating 삭제
+//            tastePlaylistRepository.delete(userId);
+//            userRatingRepository.delete(userId);
+//
+//            // 마지막으로 User 삭제
+//            userRepository.delete(userOptional.get());
+//            return true;
+//        }
+//        return false;
+//    }
 
     // Add this method to get a list of all users
     public Optional<User> getUserById(String userId) {

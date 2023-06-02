@@ -11,4 +11,5 @@ import java.util.List;
 public interface UserRatingRepository extends MongoRepository<UserRating, ObjectId> {
     List<UserRating> findByUserId(String userId);
     List<UserRating> findByUserIdAndRestaurantId(String userId, Long restaurantId);
+    void deleteByUserId(String userId);
 }
