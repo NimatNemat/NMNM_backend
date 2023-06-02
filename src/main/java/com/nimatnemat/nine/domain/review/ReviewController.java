@@ -55,6 +55,14 @@ public class ReviewController {
                                           @RequestParam Long restaurantId,
                                           @RequestBody ReviewDetail reviewDetail) {
         try {
+            String userNickName = userService.getUserNickName(userId);
+            String restaurantName = restaurantService.getRestaurantName(restaurantId);
+            String profileImage = userService.getUserProfileImage(userId);
+
+            reviewDetail.setUserNickName(userNickName);
+            reviewDetail.setRestaurantName(restaurantName);
+            reviewDetail.setProfileImage(profileImage);
+
             Review review = reviewService.createReview(userId, restaurantId, reviewDetail);
             restaurantService.updateAveragePreference(restaurantId);
             return new ResponseEntity<>(userId + "님의 리뷰가 작성되었습니다.", HttpStatus.CREATED);
@@ -103,14 +111,6 @@ public class ReviewController {
             List<ReviewDto> reviewDtoList = new ArrayList<>();
 
             for (Review review : userReviews) {
-                String userNickName = userService.getUserNickName(review.getUserId());
-                String profileImage = userService.getUserProfileImage(review.getUserId());
-                String restaurantName = restaurantService.getRestaurantName(review.getRestaurantId());
-
-                review.setUserNickName(userNickName);
-                review.setProfileImage(profileImage);
-                review.setRestaurantName(restaurantName);
-
                 ReviewDto reviewDto = new ReviewDto(review);
                 reviewDtoList.add(reviewDto);
             }
@@ -120,3 +120,10 @@ public class ReviewController {
         }
     }
 }
+//                String userNickName = userService.getUserNickName(review.getUserId());
+//                String profileImage = userService.getUserProfileImage(review.getUserId());
+//                String restaurantName = restaurantService.getRestaurantName(review.getRestaurantId());
+//
+//                review.setUserNickName(userNickName);
+//                review.setProfileImage(profileImage);
+//                review.setRestaurantName(restaurantName);

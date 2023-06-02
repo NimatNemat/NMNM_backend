@@ -94,10 +94,6 @@ public class RestaurantController {
             List<ReviewDto> reviewDtoList = new ArrayList<>();
 
             for (Review review : reviews) {
-                String userNickName = userService.getUserNickName(review.getUserId());
-                review.setUserNickName(userNickName);
-                review.setProfileImage(userService.getUserProfileImage(review.getUserId()));
-                review.setRestaurantName(restaurant.getName());
                 ReviewDto reviewDto = new ReviewDto(review);
                 reviewDtoList.add(reviewDto);
             }

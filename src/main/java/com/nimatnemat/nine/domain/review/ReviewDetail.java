@@ -16,6 +16,11 @@ public class ReviewDetail {
     private int simpleEvaluation;
     private Date reviewDate;
     private List<String> reviewImage;
+    private String userNickName;
+    private String restaurantName;
+    private String profileImage;
+
+
 
     // getters, setters, constructor 등
 }

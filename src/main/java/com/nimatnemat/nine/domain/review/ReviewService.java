@@ -1,6 +1,8 @@
 package com.nimatnemat.nine.domain.review;
 
 import com.mongodb.client.gridfs.GridFSBucket;
+import com.nimatnemat.nine.domain.restaurant.RestaurantService;
+import com.nimatnemat.nine.domain.user.UserService;
 import com.nimatnemat.nine.domain.userRating.UserRating;
 import com.nimatnemat.nine.domain.userRating.UserRatingRepository;
 import org.bson.types.ObjectId;
@@ -33,6 +35,10 @@ public class ReviewService {
     private ReviewCounterRepository reviewCounterRepository;
     @Autowired
     private UserRatingRepository userRatingRepository;  // user_rating_table에 접근하기 위한 repository
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RestaurantService restaurantService;
 
 //    @Autowired
 //    public ReviewService(ReviewRepository reviewRepository) {
@@ -65,16 +71,19 @@ public class ReviewService {
         // 새 Review 객체를 생성하고 필드를 설정
         Review review = new Review();
         review.setReviewId(reviewId);
-
-        // 새 Review 객체를 생성하고 필드를 설정
         review.setUserId(userId);
         review.setRestaurantId(restaurantId); // restaurantId가 int형이므로 변환 필요
-        review.setReviewImage(reviewDetail.getReviewImage()); // ReviewDetail에서 이미지 URL 리스트를 가져와서 Review에 설정
+
+        // ReviewDetail에서 정보를 가져와서 Review에 설정
+        review.setReviewImage(reviewDetail.getReviewImage()); // 이미지 URL 리스트
         review.setReviewInfo(reviewDetail.getReviewInfo());
         review.setReviewScore(reviewDetail.getReviewScore());
-        updateUserRating(userId, restaurantId, reviewDetail.getReviewScore());// 리뷰가 성공적으로 생성된 후에 사용자의 레스토랑 평점을 업데이트합니다.
+        updateUserRating(userId, restaurantId, reviewDetail.getReviewScore()); // 리뷰가 성공적으로 생성된 후에 사용자의 레스토랑 평점을 업데이트합니다.
         review.setSimpleEvaluation(reviewDetail.getSimpleEvaluation());
         review.setReviewDate(new Date());
+        review.setUserNickName(reviewDetail.getUserNickName()); // 추가: 사용자 닉네임
+        review.setRestaurantName(reviewDetail.getRestaurantName()); // 추가: 식당 이름
+        review.setProfileImage(reviewDetail.getProfileImage()); // 추가: 프로필 이미지
 
         // Review 객체를 데이터베이스에 저장하고 반환
         return reviewRepository.save(review);
@@ -127,6 +136,23 @@ public class ReviewService {
         return reviewRepository.findByReviewId(reviewId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 리뷰가 존재하지 않습니다."));
     }
+//    public void updateAllReviewsWithUserNickNameAndRestaurantName() {
+//        List<Review> allReviews = reviewRepository.findAll();
+//
+//        for (Review review : allReviews) {
+//                String userNickName = userService.getUserNickName(review.getUserId());
+//                String profileImage = userService.getUserProfileImage(review.getUserId());
+//                String restaurantName = restaurantService.getRestaurantName(review.getRestaurantId());
+//
+//                review.setUserNickName(userNickName);
+//                review.setProfileImage(profileImage);
+//                review.setRestaurantName(restaurantName);
+//
+//
+//            reviewRepository.save(review); // 업데이트된 리뷰 저장
+//        }
+//    }
+
 //    private void saveUserRating(String userId, Long restaurantId, int rating) {
 //        UserRating userRating = new UserRating();
 //        userRating.setUserId(userId);
