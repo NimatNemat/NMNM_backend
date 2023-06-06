@@ -36,4 +36,29 @@ public class ThirdController {
         // 받은 결과 확인하기
         return response.getBody();
     }
+    @GetMapping("/firstRecommendUpdate")
+    @Operation(summary = "첫 번째 추천 API", description = "클라이언트에서 groupName을 받아서 해당 데이터를 Flask 서버로 GET 요청하고, 그 결과를 반환합니다.")
+    public String firstRecommendUpdate(@RequestParam String groupName) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://43.200.176.52:5000/firstRecommendUpdate?groupName=" + groupName;
+
+        // send GET request and get result
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // check the received result
+        return response.getBody();
+    }
+
+    @GetMapping("/secondRecommendUpdate")
+    @Operation(summary = "두 번째 추천 API", description = "클라이언트에서 userId을 받아서 해당 데이터를 Flask 서버로 GET 요청하고, 그 결과를 반환합니다.")
+    public String secondRecommendUpdate(@RequestParam String userId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://43.200.176.52:5000/secondRecommendUpdate?userId=" + userId;
+
+        // send GET request and get result
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // check the received result
+        return response.getBody();
+    }
 }
